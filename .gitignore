@@ -1,6 +1,2 @@
-# Backups:
-*~
-*#
-.#*
-*.bak
 node_modules/
+*-mini.js
