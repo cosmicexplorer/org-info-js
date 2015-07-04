@@ -17,7 +17,7 @@ $(NODE_DIR):
 	$(UGLIFY_CC) $< > $@
 
 clean:
-	rm -f $(MINI_OUT)
+	@rm -f $(MINI_OUT)
 
 distclean: clean
-	rm -rf $(NODE_DIR)
+	@rm -rf $(NODE_DIR)
