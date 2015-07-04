@@ -4,6 +4,7 @@
   "license": "GPL-3.0",
   "repository": "https://github.com/cosmicexplorer/org-info-js",
   "devDependencies": {
-    "uglify-js": "^2.4.23"
+    "uglify-js": "^2.4.23",
+    "uglifycss": "0.0.15"
   }
 }
