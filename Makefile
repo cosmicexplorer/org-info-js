@@ -1,4 +1,4 @@
-.PHONY: all clean
+.PHONY: all clean distclean
 
 NODE_DIR := node_modules
 NPM_BIN = $(shell npm bin)
@@ -10,8 +10,14 @@ MINI_OUT := $(patsubst %.js,%-mini.js, $(wildcard *.js))
 
 all: $(MINI_OUT)
 
+$(NODE_DIR):
+	@npm install
+
 %-mini.js: %.js $(DEPS)
 	$(UGLIFY_CC) $< > $@
 
 clean:
 	rm -f $(MINI_OUT)
+
+distclean: clean
+	rm -rf $(NODE_DIR)

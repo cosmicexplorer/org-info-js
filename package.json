@@ -1,4 +1,7 @@
 {
+  "name": "org-info-js",
+  "description": "emacs org-mode navigation in javascript",
+  "license": "GPL-3.0",
   "repository": "https://github.com/cosmicexplorer/org-info-js",
   "devDependencies": {
     "uglify-js": "^2.4.23"
