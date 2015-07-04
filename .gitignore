@@ -3,26 +3,4 @@
 *#
 .#*
 *.bak
-
-# Dynamic files:
-org-info-tmp.js
-
-# Files I use for local development:
-deploy.sh
-
-# Archives:
-*.tar.bz2
-*.tar.gz
-*.zip
-
-# Fireworks & Co:
-_notes
-Thumbs.db
-
-# Emacs:
-*emacs.desktop*
-
-# SCMS:
-_MTN
-.hg*
-
+node_modules/

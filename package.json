@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/cosmicexplorer/org-info-js",
+  "devDependencies": {
+    "uglify-js": "^2.4.23"
+  }
+}
