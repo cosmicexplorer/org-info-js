@@ -1,9 +1,15 @@
 .PHONY: all clean distclean
 
+THIS_MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+CURRENT_DIR := $(patsubst %/,%,$(dir $(THIS_MAKEFILE_PATH)))
+
+# turn paths relative
+RELIFY_CMD := perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"'
+
 NODE_DIR := node_modules
 NPM_BIN = $(shell npm bin)
-UGLIFY_JS = $(NPM_BIN)/uglifyjs
-UGLIFY_CSS = $(NPM_BIN)/uglifycss
+UGLIFY_JS = $(shell $(RELIFY_CMD) $(NPM_BIN)/uglifyjs $(CURRENT_DIR)) -mc
+UGLIFY_CSS = $(shell $(RELIFY_CMD) $(NPM_BIN)/uglifycss $(CURRENT_DIRx))
 
 DEPS := $(NODE_DIR)
 
