@@ -3,13 +3,10 @@
 THIS_MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 CURRENT_DIR := $(patsubst %/,%,$(dir $(THIS_MAKEFILE_PATH)))
 
-# turn paths relative
-RELIFY_CMD := perl -e 'use File::Spec; print File::Spec->abs2rel(@ARGV) . "\n"'
-
 NODE_DIR := node_modules
 NPM_BIN = $(shell npm bin)
-UGLIFY_JS = $(shell $(RELIFY_CMD) $(NPM_BIN)/uglifyjs $(CURRENT_DIR))
-UGLIFY_CSS = $(shell $(RELIFY_CMD) $(NPM_BIN)/uglifycss $(CURRENT_DIR))
+UGLIFY_JS = $(NPM_BIN)/uglifyjs
+UGLIFY_CSS = $(NPM_BIN)/uglifycss
 
 UGLIFY_JS_OPTS := -mc --screw-ie8 2>/dev/null
 
@@ -23,9 +20,11 @@ $(NODE_DIR):
 	@npm install
 
 %-mini.js: %.js $(DEPS)
-	$(UGLIFY_JS) $< $(UGLIFY_JS_OPTS) > $@
+	@echo "$< => $@"
+	@$(UGLIFY_JS) $< $(UGLIFY_JS_OPTS) > $@
 %-mini.css: %.css $(DEPS)
-	$(UGLIFY_CSS) $< > $@
+	@echo "$< => $@"
+	@$(UGLIFY_CSS) $< > $@
 
 clean:
 	@rm -f $(MINI_OUT)
