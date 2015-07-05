@@ -8,15 +8,17 @@ NPM_BIN = $(shell npm bin)
 UGLIFY_JS = $(NPM_BIN)/uglifyjs
 UGLIFY_CSS = $(NPM_BIN)/uglifycss
 
+NODE_DEPS = $(UGLIFY_JS) $(UGLIFY_CSS)
+
 UGLIFY_JS_OPTS := -mc --screw-ie8 2>/dev/null
 
-DEPS := $(UGLIFY_JS) $(UGLIFY_CSS)
+DEPS := $(NODE_DEPS)
 
 MINI_OUT := org-info-mini.js stylesheet-mini.css
 
 all: $(MINI_OUT)
 
-$(NODE_DIR):
+$(NODE_DEPS):
 	@npm install
 
 %-mini.js: %.js $(DEPS)
