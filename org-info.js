@@ -1849,6 +1849,8 @@ var org_html_manager = {
         if (t.NODE.PARENT != t.ROOT) {
           t.NODE = t.NODE.PARENT;
           t.showSection(t.NODE.IDX);
+        } else {
+          if (0 != t.NODE.IDX) t.navigateTo(0);
         }
       } else if ('W' == s) {
         t.plainView(t.NODE.IDX);
