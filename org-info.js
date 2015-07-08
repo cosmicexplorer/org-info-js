@@ -65,7 +65,8 @@ var OrgModeVersion = "0.1.7.1-fork";
  * along with some additional properties.
  */
 function OrgNode(_div, _heading, _link, _depth, _parent, _base_id,
-  _toc_anchor) {
+  _toc_anchor)
+{
   var t = this;
   t.DIV = _div;
   t.BASE_ID = _base_id; // The suffix that's common to the heading and the diffs.
@@ -87,13 +88,15 @@ function OrgNode(_div, _heading, _link, _depth, _parent, _base_id,
   t.NAV = ""; // The info navigation
   t.BUTTONS = null;
 
-  if (null != t.PARENT) {
+  if (null != t.PARENT)
+  {
     t.PARENT.addChild(this);
     t.hide();
   }
 
   var folder = document.getElementById("text-" + t.BASE_ID);
-  if (null == folder && _base_id) {
+  if (null == folder && _base_id)
+  {
     var fid = _base_id.substring(4);
     folder = document.getElementById("text-" + fid); // try old schema
   }
@@ -115,14 +118,19 @@ OrgNode.STATE_UNFOLDED = 2;
 // static functions
 //
 
-OrgNode.findTargetsIn = function (safe, container, priority) {
-  if (container) {
+OrgNode.findTargetsIn = function (safe, container, priority)
+{
+  if (container)
+  {
     var a = container.getElementsByTagName("a");
-    if (a) {
-      for (var i = 0; i < a.length; ++i) {
+    if (a)
+    {
+      for (var i = 0; i < a.length; ++i)
+      {
         var n = a[i].getAttribute('id');
         if (n) safe['#' + n] = priority;
-        else {
+        else
+        {
           n = a[i].getAttribute('name');
           if (n) safe['#' + n] = priority;
         }
@@ -131,36 +139,46 @@ OrgNode.findTargetsIn = function (safe, container, priority) {
   }
 };
 
-OrgNode.hideElement = function (e) {
-  if (e && e['style']) { // test for e['style'] is just quick fix for error elsewhere (fixed toc and title)
+OrgNode.hideElement = function (e)
+{
+  if (e && e['style'])
+  { // test for e['style'] is just quick fix for error elsewhere (fixed toc and title)
     e.style.display = 'none';
     e.style.visibility = 'hidden';
   }
 };
 
-OrgNode.showElement = function (e) {
-  if (e && e['style']) {
+OrgNode.showElement = function (e)
+{
+  if (e && e['style'])
+  {
     e.style.display = 'block';
     e.style.visibility = 'visible';
   }
 };
 
-OrgNode.unhideElement = function (e) {
+OrgNode.unhideElement = function (e)
+{
   e.style.display = "";
   e.style.visibility = "";
 };
 
-OrgNode.isHidden = function (e) {
+OrgNode.isHidden = function (e)
+{
   if (e.style.display == 'none' || e.style.visibility == 'hidden')
     return true;
   return false;
 };
 
-OrgNode.toggleElement = function (e) {
-  if (e.style.display == 'none') {
+OrgNode.toggleElement = function (e)
+{
+  if (e.style.display == 'none')
+  {
     e.style.display = 'block';
     e.style.visibility = 'visible';
-  } else {
+  }
+  else
+  {
     e.style.display = 'none';
     e.style.visibility = 'hidden';
   }
@@ -171,10 +189,12 @@ OrgNode.toggleElement = function (e) {
  * @param dom The text node.
  * @param org The OrgNode containing the OrgNode in question.
  */
-OrgNode.textNodeToIdx = function (dom, org) {
+OrgNode.textNodeToIdx = function (dom, org)
+{
   while (dom.nodeType != 1 /* IE has no Node.ELEMENT_NODE... */ ||
     -1 == dom.attributes[
-      "id"].value.indexOf("outline-container-")) {
+      "id"].value.indexOf("outline-container-"))
+  {
     dom = dom.parentNode;
   }
   var base_id = dom.attributes["id"].value.substr(18);
@@ -186,9 +206,11 @@ OrgNode.textNodeToIdx = function (dom, org) {
  * @param base The base_id.
  * @param org The OrgNode.
  */
-OrgNode.idxForBaseId = function (base, org) {
+OrgNode.idxForBaseId = function (base, org)
+{
   if (org.BASE_ID == base) return org;
-  for (var i = 0; i < org.CHILDREN.length; ++i) {
+  for (var i = 0; i < org.CHILDREN.length; ++i)
+  {
     var o = OrgNode.idxForBaseId(base, org.CHILDREN[i]);
     if (null != o) return o;
   }
@@ -199,7 +221,8 @@ OrgNode.idxForBaseId = function (base, org) {
 // member functions
 //
 
-OrgNode.prototype.addChild = function (child) {
+OrgNode.prototype.addChild = function (child)
+{
   this.CHILDREN.push(child);
   return this.PARENT;
 };
@@ -208,27 +231,33 @@ OrgNode.prototype.addChild = function (child) {
 // OrgNode methods for paging (info mode)
 //
 
-OrgNode.prototype.hide = function () {
+OrgNode.prototype.hide = function ()
+{
   OrgNode.hideElement(this.DIV);
   if (this.PARENT)
     this.PARENT.hide();
 };
 
-OrgNode.prototype.show = function () {
+OrgNode.prototype.show = function ()
+{
   OrgNode.showElement(this.DIV);
   if (this.DEPTH > 2)
     this.PARENT.show();
 };
 
-OrgNode.prototype.showAllChildren = function () {
-  for (var i = 0; i < this.CHILDREN.length; ++i) {
+OrgNode.prototype.showAllChildren = function ()
+{
+  for (var i = 0; i < this.CHILDREN.length; ++i)
+  {
     this.CHILDREN[i].showAllChildren();
   }
   this.show();
 };
 
-OrgNode.prototype.hideAllChildren = function () {
-  for (var i = 0; i < this.CHILDREN.length; ++i) {
+OrgNode.prototype.hideAllChildren = function ()
+{
+  for (var i = 0; i < this.CHILDREN.length; ++i)
+  {
     this.CHILDREN[i].hideAllChildren();
   }
   this.hide();
@@ -238,8 +267,10 @@ OrgNode.prototype.hideAllChildren = function () {
  * Set class for links to current page to current and visited pages to visited_after_load
  * Note: visited pages will be reset after reload!
  */
-OrgNode.prototype.setLinkClass = function (on) {
-  if (this.TOC) {
+OrgNode.prototype.setLinkClass = function (on)
+{
+  if (this.TOC)
+  {
     if (on) this.TOC.className = "current";
     else this.TOC.className = "visited_after_load";
   }
@@ -257,42 +288,56 @@ OrgNode.prototype.setLinkClass = function (on) {
  * of toggling of the ROOT element. If true, prevents this OrgNode from showing
  * the folder.
  */
-OrgNode.prototype.fold = function (hide_folder) {
+OrgNode.prototype.fold = function (hide_folder)
+{
   if (this.PARENT)
     this.PARENT.DIRTY = true;
-  if (this.DIRTY) {
+  if (this.DIRTY)
+  {
     this.DIRTY = false;
     this.STATE = OrgNode.STATE_UNFOLDED; // so next state is FOLDED. See below.
   }
 
-  if (null != this.FOLDER) {
+  if (null != this.FOLDER)
+  {
 
-    if (this.STATE == OrgNode.STATE_FOLDED) {
+    if (this.STATE == OrgNode.STATE_FOLDED)
+    {
       // I was folded but one could click on me. So now show Headlines
       // recursive.
-      if (this.CHILDREN.length) {
+      if (this.CHILDREN.length)
+      {
         this.STATE = OrgNode.STATE_HEADLINES;
         OrgNode.hideElement(this.FOLDER);
-        for (var i = 0; i < this.CHILDREN.length; ++i) {
+        for (var i = 0; i < this.CHILDREN.length; ++i)
+        {
           this.CHILDREN[i].setState(OrgNode.STATE_HEADLINES);
         }
-      } else if (!hide_folder) {
+      }
+      else if (!hide_folder)
+      {
         // without children jump to unfolded state:
         this.STATE = OrgNode.STATE_UNFOLDED;
         OrgNode.showElement(this.FOLDER);
       }
-    } else if (this.STATE == OrgNode.STATE_HEADLINES) {
+    }
+    else if (this.STATE == OrgNode.STATE_HEADLINES)
+    {
       // show all content recursive
       this.STATE = OrgNode.STATE_UNFOLDED;
       OrgNode.showElement(this.FOLDER);
-      for (var i = 0; i < this.CHILDREN.length; ++i) {
+      for (var i = 0; i < this.CHILDREN.length; ++i)
+      {
         this.CHILDREN[i].setState(OrgNode.STATE_UNFOLDED);
       }
-    } else {
+    }
+    else
+    {
       // collapse. Show only own headline
       this.STATE = OrgNode.STATE_FOLDED;
       OrgNode.hideElement(this.FOLDER);
-      for (var i = 0; i < this.CHILDREN.length; ++i) {
+      for (var i = 0; i < this.CHILDREN.length; ++i)
+      {
         this.CHILDREN[i].setState(OrgNode.STATE_FOLDED);
       }
     }
@@ -305,12 +350,15 @@ OrgNode.prototype.fold = function (hide_folder) {
  * surrounding div (outline-container-id) gets hidden too.
  * Maybe add OrgNode.STATE_HIDDEN with same value?
  */
-OrgNode.prototype.setState = function (state) {
+OrgNode.prototype.setState = function (state)
+{
   var t = this;
-  for (var i = 0; i < t.CHILDREN.length; ++i) {
+  for (var i = 0; i < t.CHILDREN.length; ++i)
+  {
     t.CHILDREN[i].setState(state);
   }
-  switch (state) {
+  switch (state)
+  {
   case OrgNode.STATE_FOLDED:
     OrgNode.hideElement(t.FOLDER);
     OrgNode.hideElement(t.DIV);
@@ -403,13 +451,16 @@ var org_html_manager = {
   LAST_VIEW_MODE: 0,
   TAB_INDEX: 1000, // Users could have defined tabindexes!
   SEARCH_HIGHLIGHT_ON: false,
-  TAGS: {}, // Tags: {tag:[index,index2...],tag2:[index1,index2...]}
+  TAGS:
+  {}, // Tags: {tag:[index,index2...],tag2:[index1,index2...]}
   SORTED_TAGS: new Array(), // Sorted tags
   TAGS_INDEX: null, // Caches the tags-index screen
   CLICK_TIMEOUT: null, // Mousehandling
-  SECNUM_MAP: {}, // Map section numbers to OrgNodes
+  SECNUM_MAP:
+  {}, // Map section numbers to OrgNodes
   TOC_LINK: null, // Last link used in TOC
-  HOOKS: {
+  HOOKS:
+  {
     run_hooks: false, // Hoooks. run_hooks is false until onReady() is run.
     onShowSection: [],
     onReady: []
@@ -422,24 +473,31 @@ var org_html_manager = {
    * All user setable config vars (the documented ones) are checked and adjusted
    * to a legal value.
    */
-  setup: function () {
+  setup: function ()
+  {
     var t = this;
-    if (window['orgInfoHooks']) {
-      for (var i in orgInfoHooks) {
+    if (window['orgInfoHooks'])
+    {
+      for (var i in orgInfoHooks)
+      {
         t.HOOKS[i] = orgInfoHooks[i];
       }
       t.HOOKS['run_hooks'] = false;
     }
 
-    if (window.location.search) { // enable overwriting of settings
+    if (window.location.search)
+    { // enable overwriting of settings
       var sets = window.location.search.substring(1)
         .split('&');
-      for (var i = 0; i < sets.length; ++i) {
+      for (var i = 0; i < sets.length; ++i)
+      {
         var pos = sets[i].indexOf('=');
-        if (-1 != pos) {
+        if (-1 != pos)
+        {
           var v = sets[i].substring(pos + 1);
           var k = sets[i].substring(0, pos);
-          switch (k) {
+          switch (k)
+          {
             // Explicitely allow overwrites.
             // Fall through:
           case 'TOC':
@@ -471,10 +529,12 @@ var org_html_manager = {
     t.INNER_TITLE = (t.INNER_TITLE && t.INNER_TITLE !=
         "title_above") ?
       false : true;
-    if (t.FIXED_TOC && t.FIXED_TOC != "0") {
+    if (t.FIXED_TOC && t.FIXED_TOC != "0")
+    {
       t.FIXED_TOC = true;
       t.HIDE_TOC = false;
-    } else t.FIXED_TOC = false;
+    }
+    else t.FIXED_TOC = false;
 
     t.LINKS +=
       ((t.LINK_UP && t.LINK_UP != document.URL) ? '<a href="' + t
@@ -489,14 +549,18 @@ var org_html_manager = {
       50);
   },
 
-  trim: function (s) {
+  trim: function (s)
+  {
     var r = this.TRIMMER.exec(s);
     return RegExp.$2;
   },
 
-  removeTags: function (s) {
-    if (s) {
-      while (s.match(this.UNTAG_REGEX)) {
+  removeTags: function (s)
+  {
+    if (s)
+    {
+      while (s.match(this.UNTAG_REGEX))
+      {
         s = s.substr(0, s.indexOf('<')) + s.substr(s.indexOf('>') +
           1);
       }
@@ -509,36 +573,46 @@ var org_html_manager = {
    * @param s The headline's inner HTML.
    * @return @c s with all tags stripped.
    */
-  removeOrgTags: function (s) {
-    if (s.match(this.ORGTAG_REGEX)) {
+  removeOrgTags: function (s)
+  {
+    if (s.match(this.ORGTAG_REGEX))
+    {
       var matches = this.ORGTAG_REGEX.exec(s);
       return matches[1];
     }
     return s;
   },
 
-  init: function () {
+  init: function ()
+  {
     var t = this;
     t.RUNS++;
     t.BODY = document.getElementById("content");
-    if (null == t.BODY) {
-      if (5 > t.RUNS) {
+    if (null == t.BODY)
+    {
+      if (5 > t.RUNS)
+      {
         t.LOAD_CHECK = window.setTimeout(
           "OrgHtmlManagerLoadCheck()", t.RUN_INTERVAL);
         return;
-      } else { // be backward compatible
+      }
+      else
+      { // be backward compatible
         t.BODY = document.getElementsByTagName("body")[0];
       }
     }
-    if (!t.WINDOW) {
+    if (!t.WINDOW)
+    {
       t.WINDOW = document.createElement("div");
       t.WINDOW.style.marginBottom = "40px";
       t.WINDOW.id = "org-info-js-window";
     }
     var theIndex = document.getElementById('table-of-contents');
 
-    if (!t.initFromTOC()) {
-      if (t.RUNS < t.RUN_MAX) {
+    if (!t.initFromTOC())
+    {
+      if (t.RUNS < t.RUN_MAX)
+      {
         t.LOAD_CHECK = window.setTimeout(
           "OrgHtmlManagerLoadCheck()", t.RUN_INTERVAL);
         return;
@@ -549,18 +623,22 @@ var org_html_manager = {
     var start_section = 0;
     var start_section_explicit = false;
 
-    if ("" != window.location.hash) {
+    if ("" != window.location.hash)
+    {
       t.BASE_URL = t.BASE_URL.substring(0, t.BASE_URL.indexOf('#'));
       // Search for the start section:
-      for (var i = 0; i < t.SECS.length; ++i) {
-        if (t.SECS[i].isTargetFor[window.location.hash]) {
+      for (var i = 0; i < t.SECS.length; ++i)
+      {
+        if (t.SECS[i].isTargetFor[window.location.hash])
+        {
           start_section = i;
           start_section_explicit = 1;
           break;
         }
       }
     }
-    if ("" != window.location.search) {
+    if ("" != window.location.search)
+    {
       t.Q_PARAM = t.BASE_URL.substring(t.BASE_URL.indexOf('?'));
       t.BASE_URL = t.BASE_URL.substring(0, t.BASE_URL.indexOf('?'));
     }
@@ -572,7 +650,8 @@ var org_html_manager = {
     // Temporary FIX for missing P element if skip:nil
     var b = t.BODY;
     var n = b.firstChild;
-    if (3 == n.nodeType) { // IE has no ....
+    if (3 == n.nodeType)
+    { // IE has no ....
       var neu = n.cloneNode(true);
       var p = document.createElement("p");
       p.id = "text-before-first-headline";
@@ -613,17 +692,23 @@ var org_html_manager = {
       "org-info-js_console-input");
     document.onkeypress = OrgHtmlManagerKeyEvent;
 
-    if (t.VIEW == t.INFO_VIEW) {
+    if (t.VIEW == t.INFO_VIEW)
+    {
       t.infoView(start_section);
       t.showSection(start_section);
       // For Opera 10 - want to see the title and buttons on (re-)load.
-      window.setTimeout(function () {
+      window.setTimeout(function ()
+      {
         window.scrollTo(0, 0);
       }, 100);
-    } else if (t.VIEW == t.SLIDE_VIEW) {
+    }
+    else if (t.VIEW == t.SLIDE_VIEW)
+    {
       t.slideView(start_section);
       t.showSection(start_section);
-    } else {
+    }
+    else
+    {
       var v = t.VIEW; // will be changed in t.plainView()!
       t.plainView(start_section, 1);
       t.ROOT.DIRTY = true;
@@ -637,13 +722,15 @@ var org_html_manager = {
         t.showSection(start_section);
     }
 
-    if ("" != t.OCCUR) {
+    if ("" != t.OCCUR)
+    {
       t.CONSOLE_INPUT.value = t.OCCUR;
       t.READ_COMMAND = 'o';
       t.evalReadCommand();
     }
 
-    if (t.STARTUP_MESSAGE) {
+    if (t.STARTUP_MESSAGE)
+    {
       t.warn(
         "This page uses org-info.js. Press '?' for more information.",
         true);
@@ -652,36 +739,44 @@ var org_html_manager = {
     t.runHooks('onReady', this.NODE);
 
     /* extra postprocessing */
-    var getTagSpanFromTag = function (span) {
+    var getTagSpanFromTag = function (span)
+    {
       var innerSpans = span.getElementsByTagName("span");
       var spanIndex = 0;
       var curInnerSpan = innerSpans[spanIndex];
-      while ((!curInnerSpan || !curInnerSpan.getAttribute('class')) &&
-        spanIndex < innerSpans.length) {
+      while ((!curInnerSpan || !curInnerSpan.getAttribute(
+          'class')) &&
+        spanIndex < innerSpans.length)
+      {
         ++spanIndex;
         curInnerSpan = innerSpans[spanIndex];
       }
-      if (!curInnerSpan || !curInnerSpan.getAttribute('class')) {
+      if (!curInnerSpan || !curInnerSpan.getAttribute('class'))
+      {
         return null;
       }
       return curInnerSpan; // can be null, but probably won't be
     };
-    var getHrefHashFromTagSpan = function (tagSpan) {
+    var getHrefHashFromTagSpan = function (tagSpan)
+    {
       return "org-html-manager-sorted-tags-" + tagSpan.getAttribute(
         'class');
     };
-    var getOnClickFromTagSpan = function (tagSpan) {
+    var getOnClickFromTagSpan = function (tagSpan)
+    {
       return "org_html_manager.showTagsIndex();" +
         " OrgNode.toggleElement(document.getElementById('" +
         getHrefHashFromTagSpan(tagSpan) + "'));";
     };
     var tags = document.getElementsByClassName("tag");
     var newAnchor;
-    for (var tagIndex = 0; tagIndex < tags.length; ++tagIndex) {
+    for (var tagIndex = 0; tagIndex < tags.length; ++tagIndex)
+    {
       var curTag = tags[tagIndex];
       var curTagChild = curTag.firstElementChild || curTag.firstChild;
       var tagSpan = getTagSpanFromTag(curTag);
-      if (tagSpan) {
+      if (tagSpan)
+      {
         newAnchor = document.createElement("a");
         newAnchor.setAttribute('class', 'tag org-tag');
         newAnchor.setAttribute('href', '#' +
@@ -696,7 +791,9 @@ var org_html_manager = {
     /* make titles href to relevant sections */
     var titles = document.getElementsByClassName('title');
     var curTitle;
-    for (var titleIndex = 0; titleIndex < titles.length; ++titleIndex) {
+    for (var titleIndex = 0; titleIndex < titles.length; ++
+      titleIndex)
+    {
       curTitle = titles[titleIndex];
       curTitle = this.replaceTextWithAnchor(curTitle, '#');
     }
@@ -705,7 +802,8 @@ var org_html_manager = {
     var sectionHeaders = document.querySelectorAll('[id^=sec-]');
     var curSectionHeader;
     for (var sectionIndex = 0; sectionIndex < sectionHeaders.length;
-      ++sectionIndex) {
+      ++sectionIndex)
+    {
       curSectionHeader = sectionHeaders[sectionIndex];
       this.replaceTextWithAnchor(
         curSectionHeader, '#' + curSectionHeader.id);
@@ -714,7 +812,8 @@ var org_html_manager = {
     /* added hash sections */
     var hashId = window.location.hash.substring(1);
     if (hashId === '') return;
-    switch (hashId) {
+    switch (hashId)
+    {
     case "help":
       t.showHelp();
       window.location.hash = "";
@@ -726,7 +825,8 @@ var org_html_manager = {
     default:
       var matches = hashId.match(
         /^org\-html\-manager\-sorted\-tags\-/);
-      if (matches) {
+      if (matches)
+      {
         t.showTagsIndex();
         var elementId = document.getElementById(hashId);
         OrgNode.toggleElement(elementId);
@@ -737,39 +837,49 @@ var org_html_manager = {
   },
 
   // quick and dirty, but also relatively reliable
-  replaceTextWithAnchor: function (node, url) {
+  replaceTextWithAnchor: function (node, url)
+  {
     var text = node.innerHTML;
-    node.innerHTML = '<a class="none" href="' + url + '">' + text + '</a>';
+    node.innerHTML = '<a class="none" href="' + url + '">' + text +
+      '</a>';
     return node;
   },
 
-  initFromTOC: function () {
+  initFromTOC: function ()
+  {
     var t = this;
     // scan the document for sections. We do it by scanning the toc,
     // so we do what is customized for orgmode (depth of sections in toc).
-    if (t.RUNS == 1 || !t.ROOT) {
+    if (t.RUNS == 1 || !t.ROOT)
+    {
       var toc = document.getElementById("table-of-contents");
 
-      if (null != toc) {
+      if (null != toc)
+      {
         var heading = null;
         var i = 0;
         for (i; heading == null && i < 7; ++i)
           heading = toc.getElementsByTagName("h" + i)[0];
-        heading.onclick = function () {
+        heading.onclick = function ()
+        {
           org_html_manager.fold(0);
         };
         heading.style.cursor = "pointer";
         this.replaceTextWithAnchor(heading, '#');
-        if (t.MOUSE_HINT) {
-          heading.onmouseover = function () {
+        if (t.MOUSE_HINT)
+        {
+          heading.onmouseover = function ()
+          {
             org_html_manager.highlightHeadline(0);
           };
-          heading.onmouseout = function () {
+          heading.onmouseout = function ()
+          {
             org_html_manager.unhighlightHeadline(0);
           };
         }
 
-        if (t.FIXED_TOC) {
+        if (t.FIXED_TOC)
+        {
           heading.setAttribute('onclick',
             'org_html_manager.toggleGlobally();');
           t.ROOT = new OrgNode(null,
@@ -783,13 +893,16 @@ var org_html_manager = {
             i,
             null); // the root node
           t.NODE = t.ROOT;
-        } else {
+        }
+        else
+        {
           t.ROOT = new OrgNode(null,
             t.BODY.getElementsByTagName("h1")[0],
             'javascript:org_html_manager.navigateTo(0);',
             0,
             null); // the root node
-          if (t.HIDE_TOC) {
+          if (t.HIDE_TOC)
+          {
             t.TOC = new OrgNode(toc,
               "",
               'javascript:org_html_manager.navigateTo(0);',
@@ -797,7 +910,9 @@ var org_html_manager = {
               null);
             t.NODE = t.ROOT;
             OrgNode.hideElement(toc);
-          } else {
+          }
+          else
+          {
             t.TOC = new OrgNode(toc,
               heading,
               'javascript:org_html_manager.navigateTo(0);',
@@ -810,7 +925,8 @@ var org_html_manager = {
         }
         if (t.TOC) t.TOC.FOLDER = document.getElementById(
           "text-table-of-contents");
-      } else
+      }
+      else
         return false;
     }
 
@@ -822,25 +938,32 @@ var org_html_manager = {
       return false;
 
     var fn = document.getElementById('footnotes');
-    if (fn) {
+    if (fn)
+    {
       var fnheading = null;
       var c = fn.childNodes;
-      for (var i = 0; i < c.length; ++i) {
-        if ("footnotes" == c[i].className) {
+      for (var i = 0; i < c.length; ++i)
+      {
+        if ("footnotes" == c[i].className)
+        {
           fnheading = c[i];
           break;
         }
       }
       var sec = t.SECS.length;
-      fnheading.onclick = function () {
+      fnheading.onclick = function ()
+      {
         org_html_manager.fold("" + sec);
       };
       fnheading.style.cursor = "pointer";
-      if (t.MOUSE_HINT) {
-        fnheading.onmouseover = function () {
+      if (t.MOUSE_HINT)
+      {
+        fnheading.onmouseover = function ()
+        {
           org_html_manager.highlightHeadline("" + sec);
         };
-        fnheading.onmouseout = function () {
+        fnheading.onmouseout = function ()
+        {
           org_html_manager.unhighlightHeadline("" + sec);
         };
       }
@@ -851,14 +974,16 @@ var org_html_manager = {
       t.SECS.push(fnsec);
     }
 
-    if (t.TOC_DEPTH) {
+    if (t.TOC_DEPTH)
+    {
       t.cutToc(theIndex, 1);
     }
 
     // Move the title into the first visible section.
     // TODO: show title above everything if FIXED_TOC !!!
     t.TITLE = t.BODY.getElementsByTagName("h1")[0];
-    if (t.INNER_TITLE && !t.FIXED_TOC && t.VIEW != t.SLIDE_VIEW) {
+    if (t.INNER_TITLE && !t.FIXED_TOC && t.VIEW != t.SLIDE_VIEW)
+    {
       t.INNER_TITLE = t.TITLE.cloneNode(true);
       /* TODO: this is still based on wrong behaviour of browsers (same id for two elements)
        * But this here does not work:
@@ -881,10 +1006,14 @@ var org_html_manager = {
   /**
    * Used by OrgHtmlManager::initFromToc
    */
-  ulToOutlines: function (ul) {
-    if (ul.hasChildNodes() && !ul.scanned_for_org) {
-      for (var i = 0; i < ul.childNodes.length; ++i) {
-        if (false == this.liToOutlines(ul.childNodes[i])) {
+  ulToOutlines: function (ul)
+  {
+    if (ul.hasChildNodes() && !ul.scanned_for_org)
+    {
+      for (var i = 0; i < ul.childNodes.length; ++i)
+      {
+        if (false == this.liToOutlines(ul.childNodes[i]))
+        {
           return false;
         }
       }
@@ -896,23 +1025,34 @@ var org_html_manager = {
   /**
    * Used by OrgHtmlManager::initFromToc
    */
-  liToOutlines: function (li) {
-    if (!li.scanned_for_org) {
-      for (var i = 0; i < li.childNodes.length; ++i) {
+  liToOutlines: function (li)
+  {
+    if (!li.scanned_for_org)
+    {
+      for (var i = 0; i < li.childNodes.length; ++i)
+      {
         var c = li.childNodes[i];
-        switch (c.nodeName) {
+        switch (c.nodeName)
+        {
         case "A":
           var newHref = this.mkNodeFromHref(c);
-          if (false == newHref) {
+          if (false == newHref)
+          {
             return false;
-          } else {
-            c.setAttribute('title', "Go to: " + c.innerHTML.replace(/&.*/, ""));
-            c.innerHTML = c.innerHTML.replace(/(&nbsp;)+/, function (res, g1) {
-              return "<span class='none'>" + res + "</span>";
-            });
+          }
+          else
+          {
+            c.setAttribute('title', "Go to: " + c.innerHTML.replace(
+              /&.*/, ""));
+            c.innerHTML = c.innerHTML.replace(/(&nbsp;)+/,
+              function (res, g1)
+              {
+                return "<span class='none'>" + res + "</span>";
+              });
             c.setAttribute('onclick', newHref + ';');
             c.tabIndex = this.TAB_INDEX;
-            c.onfocus = function () {
+            c.onfocus = function ()
+            {
               org_html_manager.TOC_LINK = this;
               return void 0;
             };
@@ -933,14 +1073,19 @@ var org_html_manager = {
   /**
    * Used by OrgHtmlManager::initFromToc
    */
-  cutToc: function (ul, cur_depth) {
+  cutToc: function (ul, cur_depth)
+  {
     cur_depth++;
-    if (ul.hasChildNodes()) {
-      for (var i = 0; i < ul.childNodes.length; ++i) {
+    if (ul.hasChildNodes())
+    {
+      for (var i = 0; i < ul.childNodes.length; ++i)
+      {
         var li = ul.childNodes[i];
-        for (var j = 0; j < li.childNodes.length; ++j) {
+        for (var j = 0; j < li.childNodes.length; ++j)
+        {
           var c = li.childNodes[j];
-          if (c.nodeName == "UL") {
+          if (c.nodeName == "UL")
+          {
             if (cur_depth > this.TOC_DEPTH)
               li.removeChild(c);
             else
@@ -955,9 +1100,11 @@ var org_html_manager = {
    * Used by OrgHtmlManager::liToOutlines
    * @param anchor <a...> element in the TOC, that links to a section.
    */
-  mkNodeFromHref: function (anchor) {
+  mkNodeFromHref: function (anchor)
+  {
     s = anchor.href;
-    if (s.match(this.REGEX)) {
+    if (s.match(this.REGEX))
+    {
       var matches = this.REGEX.exec(s);
       var id = matches[2];
       var h = document.getElementById(id);
@@ -965,33 +1112,43 @@ var org_html_manager = {
       // So we stop scanning and set the timeout func in caller.
       // We could even count the <ul> and <li> elements above to speed up the next
       // scan.
-      if (null == h) {
+      if (null == h)
+      {
         return (false);
       }
       var div = h.parentNode;
       var sec = this.SECS.length;
       var depth = div.className.substr(8);
-      h.onclick = function () {
+      h.onclick = function ()
+      {
         org_html_manager.fold("" + sec);
       };
       h.style.cursor = "pointer";
-      if (this.MOUSE_HINT) {
-        h.onmouseover = function () {
+      if (this.MOUSE_HINT)
+      {
+        h.onmouseover = function ()
+        {
           org_html_manager.highlightHeadline("" + sec);
         };
-        h.onmouseout = function () {
+        h.onmouseout = function ()
+        {
           org_html_manager.unhighlightHeadline("" + sec);
         };
       }
       var link = 'javascript:org_html_manager.navigateTo(' + sec +
         ')';
-      if (depth > this.NODE.DEPTH) {
+      if (depth > this.NODE.DEPTH)
+      {
         this.NODE = new OrgNode(div, h, link, depth, this.NODE,
           id, anchor);
-      } else if (depth == 2) {
+      }
+      else if (depth == 2)
+      {
         this.NODE = new OrgNode(div, h, link, depth, this.ROOT,
           id, anchor);
-      } else {
+      }
+      else
+      {
         var p = this.NODE;
         while (p.DEPTH > depth) p = p.PARENT;
         this.NODE = new OrgNode(div, h, link, depth, p.PARENT, id,
@@ -1000,19 +1157,26 @@ var org_html_manager = {
       this.SECS.push(this.NODE);
       // Prepare the tags-index:
       var spans = h.getElementsByTagName("span");
-      if (spans) {
-        for (var i = 0; i < spans.length; ++i) {
-          if (spans[i].className == "tag") {
+      if (spans)
+      {
+        for (var i = 0; i < spans.length; ++i)
+        {
+          if (spans[i].className == "tag")
+          {
             var tags = spans[i].innerHTML.split("&nbsp;");
-            for (var j = 0; j < tags.length; ++j) {
+            for (var j = 0; j < tags.length; ++j)
+            {
               var t = this.removeTags(tags[j]);
-              if (!this.TAGS[t]) {
+              if (!this.TAGS[t])
+              {
                 this.TAGS[t] = new Array();
                 this.SORTED_TAGS.push(t);
               }
               this.TAGS[t].push(sec);
             }
-          } else if (spans[i].className.match(this.SECNUM_REGEX)) {
+          }
+          else if (spans[i].className.match(this.SECNUM_REGEX))
+          {
             this.SECNUM_MAP[this.trim(spans[i].innerHTML)] = this
               .NODE;
           }
@@ -1031,11 +1195,13 @@ var org_html_manager = {
    *
    * @todo Apply style classes to the generated links.
    */
-  build: function () {
+  build: function ()
+  {
     var index_name = this.TITLE.innerHTML;
     var min_subindex_sec = 0;
 
-    for (var i = 0; i < this.SECS.length; ++i) {
+    for (var i = 0; i < this.SECS.length; ++i)
+    {
       this.SECS[i].IDX = i;
       var html =
         '<table class="org-info-js_info-navigation" width="100%" border="0" style="border-bottom:1px solid black;">' +
@@ -1050,11 +1216,13 @@ var org_html_manager = {
         '</td></tr><tr><td style="text-align:left;border-style:none;vertical-align:bottom;width:22%">';
 
       var id, link, hadPrev = false;
-      if (i > 0) {
+      if (i > 0)
+      {
         hadPrev = true;
         id = this.SECS[i - 1].BASE_ID;
         link = '#';
-        if (id) {
+        if (id)
+        {
           link += id;
         }
         html += '<a accesskey="p" href="' + link + '" onclick="' +
@@ -1063,13 +1231,16 @@ var org_html_manager = {
             .innerHTML) +
           '">Previous</a>';
       }
-      if (i < this.SECS.length - 1) {
-        if (hadPrev) {
+      if (i < this.SECS.length - 1)
+      {
+        if (hadPrev)
+        {
           html += ' | ';
         }
         id = this.SECS[i + 1].BASE_ID;
         link = '#';
-        if (id) {
+        if (id)
+        {
           link += id;
         }
         html += '<a accesskey="n" href="' + link + '" onclick="' +
@@ -1082,17 +1253,20 @@ var org_html_manager = {
       html +=
         '</td><td style="text-align:center;vertical-align:bottom;border-style:none;width:56%;">';
 
-      html += '<a class="none page-header" href="#' + this.SECS[i].BASE_ID +
+      html += '<a class="none page-header" href="#' + this.SECS[i]
+        .BASE_ID +
         '">';
 
       if (i > 0 && this.SECS[i].PARENT.PARENT) // != this.ROOT)
       {
         id = this.SECS[i].PARENT.PARENT.BASE_ID;
         link = '#';
-        if (id) {
+        if (id)
+        {
           link += id;
         }
-        html += '<a class="page-header" href="' + link + '" onclick="' +
+        html += '<a class="page-header" href="' + link +
+          '" onclick="' +
           this.SECS[i].PARENT.L +
           '" title="Go to: ' +
           this.removeTags(this.SECS[i].PARENT.HEADING.innerHTML) +
@@ -1100,7 +1274,8 @@ var org_html_manager = {
           '<span style="font-variant:small-caps;font-style:italic;">' +
           this.SECS[
             i].PARENT.HEADING.innerHTML + '</span></a>';
-      } else
+      }
+      else
         html +=
         '<span style="font-variant:small-caps;font-style:italic;">' +
         this.SECS[i].HEADING.innerHTML + '</span>';
@@ -1108,7 +1283,8 @@ var org_html_manager = {
       // Right:
       html +=
         '</a></td><td style="text-align:right;vertical-align:bottom;border-style:none;width:22%">';
-      html += '<a class="none page-header" href="#' + this.SECS[i].BASE_ID +
+      html += '<a class="none page-header" href="#' + this.SECS[i]
+        .BASE_ID +
         '">';
       html += (i + 1) + '</a></td></tr></table>';
 
@@ -1123,7 +1299,8 @@ var org_html_manager = {
       // this.SECS[i].HEADING.appendChild(this.SECS[i].BUTTONS);
         this.SECS[i].DIV.insertBefore(this.SECS[i].BUTTONS, this.SECS[
         i].HEADING); //div.firstChild.nextSibling);
-      else if (this.SECS[i].DIV.hasChildNodes()) {
+      else if (this.SECS[i].DIV.hasChildNodes())
+      {
         this.SECS[i].DIV.insertBefore(this.SECS[i].BUTTONS, this.SECS[
             i].DIV
           .firstChild);
@@ -1133,14 +1310,17 @@ var org_html_manager = {
 
       var sublink;
       // subindex for sections containing subsections:
-      if (0 < this.SECS[i].CHILDREN.length && this.LOCAL_TOC) {
+      if (0 < this.SECS[i].CHILDREN.length && this.LOCAL_TOC)
+      {
         var navi2 = document.createElement("div");
         navi2.className = "org-info-js_local-toc";
         html = 'Contents:<br /><ul>';
-        for (var k = 0; k < this.SECS[i].CHILDREN.length; ++k) {
+        for (var k = 0; k < this.SECS[i].CHILDREN.length; ++k)
+        {
           id = this.SECS[i].CHILDREN[k].BASE_ID;
           link = '#';
-          if (id) {
+          if (id)
+          {
             link += id;
           }
           sublink = this.removeTags(this.removeOrgTags(
@@ -1152,7 +1332,8 @@ var org_html_manager = {
         }
         html += '</ul>';
         navi2.innerHTML = html;
-        if ("above" == this.LOCAL_TOC) {
+        if ("above" == this.LOCAL_TOC)
+        {
           if (this.SECS[i].FOLDER)
             this.SECS[i].FOLDER.insertBefore(navi2, this.SECS[i].FOLDER
               .firstChild);
@@ -1161,7 +1342,9 @@ var org_html_manager = {
               navi2, this.SECS[i].DIV.getElementsByTagName("h" +
                 this.SECS[
                   i].DEPTH)[0].nextSibling);
-        } else {
+        }
+        else
+        {
           if (this.SECS[i].FOLDER)
             this.SECS[i].FOLDER.appendChild(navi2);
           else
@@ -1176,10 +1359,13 @@ var org_html_manager = {
   /**
    * Execute arbitrary JavaScript code. Used for configuration.
    */
-  set: function (eval_key, eval_val) {
-    if ("VIEW" == eval_key) {
+  set: function (eval_key, eval_val)
+  {
+    if ("VIEW" == eval_key)
+    {
       var pos = eval_val.indexOf('_');
-      if (-1 != pos) {
+      if (-1 != pos)
+      {
         this.INNER_TITLE = eval_val.substr(pos + 1); // might be info_title_above now.
         eval_val = eval_val.substr(0, pos);
       }
@@ -1190,9 +1376,11 @@ var org_html_manager = {
       var info_title_above = this.INFO_VIEW;
       var slide = this.SLIDE_VIEW;
       eval("this." + eval_key + "=" + eval_val + ";");
-    } else if ("HELP" == eval_key)
+    }
+    else if ("HELP" == eval_key)
       eval("this.STARTUP_MESSAGE=" + eval_val + ";");
-    else {
+    else
+    {
       if (eval_val)
         eval("this." + eval_key + "='" + eval_val + "';");
       else
@@ -1200,18 +1388,22 @@ var org_html_manager = {
     }
   },
 
-  convertLinks: function () {
+  convertLinks: function ()
+  {
     var i = (this.HIDE_TOC ? 0 : 1);
     var j;
     var foot_sec = this.SECS.length - 1;
     var id;
     // for(i; i < this.SECS.length; ++i) {
     var links = document.getElementsByTagName("a"); // must be document!
-    for (j = 0; j < links.length; ++j) {
+    for (j = 0; j < links.length; ++j)
+    {
       var href = links[j].href.replace(this.BASE_URL, '');
       // could use quicksort like search here:
-      for (var k = 0; k < this.SECS.length; ++k) {
-        if (this.SECS[k].isTargetFor[href]) {
+      for (var k = 0; k < this.SECS.length; ++k)
+      {
+        if (this.SECS[k].isTargetFor[href])
+        {
           id = this.SECS[k].BASE_ID;
           links[j].href = '#' + (id ? id : "");
           // setting .onclick isn't working on ff, but this is
@@ -1242,24 +1434,30 @@ var org_html_manager = {
    * @param sec   The section to show. This is the index
    *              in @c SECS.
    */
-  showSection: function (sec) {
+  showSection: function (sec)
+  {
     var t = this;
     var section = parseInt(sec);
     var last_node = t.NODE;
     var hook = 'onShowSection';
-    if (t.HIDE_TOC && t.NODE == t.TOC && !t.FIXED_TOC) {
+    if (t.HIDE_TOC && t.NODE == t.TOC && !t.FIXED_TOC)
+    {
       OrgNode.hideElement(t.TOC.DIV);
-      if (t.PLAIN_VIEW == t.VIEW) {
+      if (t.PLAIN_VIEW == t.VIEW)
+      {
         t.ROOT.showAllChildren();
-        for (var i = 0; i < t.ROOT.CHILDREN.length; ++i) {
+        for (var i = 0; i < t.ROOT.CHILDREN.length; ++i)
+        {
           t.ROOT.CHILDREN[i].STATE = OrgNode.STATE_UNFOLDED;
           t.ROOT.CHILDREN[i].fold();
         }
       }
     }
     if ('?/toc/?' != sec && null != t.TOC_LINK) t.TOC_LINK.blur();
-    if ('?/toc/?' == sec || (!isNaN(section) && t.SECS[section])) {
-      if ('?/toc/?' == sec && t.HIDE_TOC) {
+    if ('?/toc/?' == sec || (!isNaN(section) && t.SECS[section]))
+    {
+      if ('?/toc/?' == sec && t.HIDE_TOC)
+      {
         hook = 'onShowToc';
         t.NODE = t.TOC;
         t.ROOT.hideAllChildren();
@@ -1268,9 +1466,12 @@ var org_html_manager = {
         else
           t.NODE.setState(OrgNode.STATE_UNFOLDED);
         window.scrollTo(0, 0);
-      } else {
+      }
+      else
+      {
         t.NODE = t.SECS[section];
-        if (t.SLIDE_VIEW == t.VIEW || t.INFO_VIEW == t.VIEW) {
+        if (t.SLIDE_VIEW == t.VIEW || t.INFO_VIEW == t.VIEW)
+        {
           OrgNode.hideElement(t.NODE.BUTTONS);
           t.NODE.setState(OrgNode.STATE_UNFOLDED);
           for (var i = 0; i < t.NODE.CHILDREN.length; ++i)
@@ -1290,7 +1491,9 @@ var org_html_manager = {
               t.Q_PARAM +
               t.getDefaultTarget());
           if (!t.FIXED_TOC) OrgNode.showElement(document.body);
-        } else {
+        }
+        else
+        {
           if (!t.VIEW_BUTTONS) OrgNode.hideElement(last_node.BUTTONS);
           OrgNode.showElement(t.NODE.BUTTONS);
           t.NODE.setState(OrgNode.UNFOLDED);
@@ -1305,13 +1508,15 @@ var org_html_manager = {
     }
     last_node.setLinkClass();
     t.NODE.setLinkClass(true);
-    t.runHooks(hook, {
+    t.runHooks(hook,
+    {
       'last': last_node,
       'current': t.NODE
     });
   },
 
-  plainView: function (sec, skip_show_section) {
+  plainView: function (sec, skip_show_section)
+  {
     var t = this;
     document.onclick = null;
     document.ondblclick = null;
@@ -1324,7 +1529,8 @@ var org_html_manager = {
     if (t.WINDOW.firstChild) // might not be set after init
       t.WINDOW.removeChild(t.WINDOW.firstChild);
     t.ROOT.showAllChildren();
-    for (var i = 0; i < t.ROOT.CHILDREN.length; ++i) {
+    for (var i = 0; i < t.ROOT.CHILDREN.length; ++i)
+    {
       t.ROOT.CHILDREN[i].STATE = OrgNode.STATE_UNFOLDED;
       t.ROOT.CHILDREN[i].fold();
     }
@@ -1335,13 +1541,15 @@ var org_html_manager = {
     else t.NODE.DIV.scrollIntoView(true);
   },
 
-  infoView: function (sec, skip_show_section) {
+  infoView: function (sec, skip_show_section)
+  {
     var t = this;
     document.onclick = null;
     document.ondblclick = null;
     t.VIEW = t.INFO_VIEW;
     t.unhighlightHeadline(t.NODE.IDX);
-    if (t.INNER_TITLE && !t.FIXED_TOC) {
+    if (t.INNER_TITLE && !t.FIXED_TOC)
+    {
       OrgNode.showElement(t.INNER_TITLE);
       OrgNode.hideElement(t.TITLE);
     }
@@ -1354,7 +1562,8 @@ var org_html_manager = {
     window.scrollTo(0, 0);
   },
 
-  slideView: function (sec, skip_show_section) {
+  slideView: function (sec, skip_show_section)
+  {
     var t = this;
     t.VIEW = t.SLIDE_VIEW;
     t.unhighlightHeadline(t.NODE.IDX);
@@ -1371,41 +1580,56 @@ var org_html_manager = {
   },
 
   // hide/show List-items. show > 0: show next listitem, < 0 hide last listitem. null means new section.
-  adjustSlide: function (sec, show) {
+  adjustSlide: function (sec, show)
+  {
     var nextForward = true;
     var nextBack = true;
     var next = false;
     if (sec > this.NODE.IDX) next = true;
     if (null == show) next = true;
 
-    if (next) {
+    if (next)
+    {
       for (var n = this.SECS[sec].FOLDER.firstChild; null != n; n =
-        n.nextSibling) {
-        if ("UL" == n.nodeName) {
+        n.nextSibling)
+      {
+        if ("UL" == n.nodeName)
+        {
           var lis = n.getElementsByTagName("li");
-          for (var i = 1; i < lis.length; ++i) {
+          for (var i = 1; i < lis.length; ++i)
+          {
             var l = lis[i];
             OrgNode.hideElement(l);
             nextForward = false;
           }
         }
       }
-    } else {
+    }
+    else
+    {
       var lists = this.WINDOW.getElementsByTagName("ul");
-      for (var n = 0; n < lists.length; ++n) {
+      for (var n = 0; n < lists.length; ++n)
+      {
         var lis = lists[n].getElementsByTagName("li");
-        for (var i = 1; i < lis.length; ++i) {
+        for (var i = 1; i < lis.length; ++i)
+        {
           var l = lis[i];
-          if (show > 0) {
-            if (OrgNode.isHidden(l)) {
+          if (show > 0)
+          {
+            if (OrgNode.isHidden(l))
+            {
               OrgNode.unhideElement(l);
               if (i < (lis.length - 1)) nextForward = false;
               if (0 < i) nextBack = false;
               break;
             }
-          } else { // show < 0
-            if (!OrgNode.isHidden(l)) {
-              if (1 < i) {
+          }
+          else
+          { // show < 0
+            if (!OrgNode.isHidden(l))
+            {
+              if (1 < i)
+              {
                 nextBack = false;
                 OrgNode.hideElement(lis[i - 1]);
                 break;
@@ -1417,24 +1641,28 @@ var org_html_manager = {
     }
 
     if (nextForward)
-      document.onclick = function () {
+      document.onclick = function ()
+      {
         org_html_manager.scheduleClick(
           "org_html_manager.nextSection(org_html_manager.NODE.IDX + 1)"
         );
       };
     else
-      document.onclick = function () {
+      document.onclick = function ()
+      {
         org_html_manager.scheduleClick(
           "org_html_manager.adjustSlide(org_html_manager.NODE.IDX, +1)"
         );
       };
     if (nextBack)
-      document.ondblclick = function () {
+      document.ondblclick = function ()
+      {
         org_html_manager.scheduleClick(
           "org_html_manager.previousSection()");
       };
     else
-      document.ondblclick = function () {
+      document.ondblclick = function ()
+      {
         org_html_manager.scheduleClick(
           "org_html_manager.adjustSlide(" +
           this.NODE.IDX + ", -1)");
@@ -1446,7 +1674,8 @@ var org_html_manager = {
    * This also resets the <code>Q_PARAM</code> to an empty string.
    * @param sec The section index to show.
    */
-  toggleView: function (sec) {
+  toggleView: function (sec)
+  {
     var t = this;
     t.Q_PARAM = "";
     t.removeWarning();
@@ -1456,7 +1685,8 @@ var org_html_manager = {
       t.infoView(sec);
   },
 
-  fold: function (sec) {
+  fold: function (sec)
+  {
     var t = this;
     t.removeWarning();
     var section = parseInt(sec);
@@ -1466,25 +1696,33 @@ var org_html_manager = {
     OrgNode.showElement(t.NODE.BUTTONS);
   },
 
-  toggleGlobally: function () {
+  toggleGlobally: function ()
+  {
     var t = this;
-    if (t.ROOT.DIRTY) {
+    if (t.ROOT.DIRTY)
+    {
       t.ROOT.STATE = OrgNode.STATE_UNFOLDED;
     }
 
-    if (OrgNode.STATE_UNFOLDED == t.ROOT.STATE) {
-      for (var i = 0; i < t.ROOT.CHILDREN.length; ++i) {
+    if (OrgNode.STATE_UNFOLDED == t.ROOT.STATE)
+    {
+      for (var i = 0; i < t.ROOT.CHILDREN.length; ++i)
+      {
         // Pretend they are unfolded. They will toggle to FOLDED then:
         t.ROOT.CHILDREN[i].STATE = OrgNode.STATE_UNFOLDED;
         t.ROOT.CHILDREN[i].fold(true);
       }
       t.ROOT.STATE = OrgNode.STATE_UNFOLDED;
       t.ROOT.STATE = OrgNode.STATE_FOLDED;
-    } else if (OrgNode.STATE_FOLDED == t.ROOT.STATE) {
+    }
+    else if (OrgNode.STATE_FOLDED == t.ROOT.STATE)
+    {
       for (var i = 0; i < t.ROOT.CHILDREN.length; ++i)
         t.ROOT.CHILDREN[i].fold(true);
       t.ROOT.STATE = OrgNode.STATE_HEADLINES;
-    } else {
+    }
+    else
+    {
       for (var i = 0; i < t.ROOT.CHILDREN.length; ++i)
         t.ROOT.CHILDREN[i].fold();
       t.ROOT.STATE = OrgNode.STATE_UNFOLDED;
@@ -1496,24 +1734,32 @@ var org_html_manager = {
 
   
 
-  executeClick: function (func) {
+  executeClick: function (func)
+  {
     var t = this;
-    if (t.READING) {
+    if (t.READING)
+    {
       t.endRead();
       t.hideConsole();
-    } else if (t.MESSAGING) {
+    }
+    else if (t.MESSAGING)
+    {
       t.removeWarning();
     }
     eval(func);
     if (null != t.CLICK_TIMEOUT) t.CLICK_TIMEOUT = null;
   },
 
-  scheduleClick: function (func, when) {
+  scheduleClick: function (func, when)
+  {
     if (null == when) when = 250;
-    if (null == this.CLICK_TIMEOUT) {
+    if (null == this.CLICK_TIMEOUT)
+    {
       this.CLICK_TIMEOUT = window.setTimeout(
         "org_html_manager.executeClick(" + func + ")", when);
-    } else {
+    }
+    else
+    {
       window.clearTimeout(this.CLICK_TIMEOUT);
       this.CLICK_TIMEOUT = null;
     }
@@ -1521,14 +1767,16 @@ var org_html_manager = {
 
   
 
-  nextSection: function () {
+  nextSection: function ()
+  {
     var T = this;
     var i = T.NODE.IDX + 1;
     if (i < T.SECS.length) T.navigateTo(i);
     else T.warn("Already last section.");
   },
 
-  previousSection: function () {
+  previousSection: function ()
+  {
     var t = this;
     var i = t.NODE.IDX;
     if (i > 0) t.navigateTo(i - 1);
@@ -1539,12 +1787,16 @@ var org_html_manager = {
    * This one is just here, because we might want to push different than
    * navigational commands on the history in the future. Is this true?
    */
-  navigateTo: function (sec) {
+  navigateTo: function (sec)
+  {
     var t = this;
-    if (t.READING) {
+    if (t.READING)
+    {
       t.endRead();
       t.hideConsole();
-    } else if (t.MESSAGING) {
+    }
+    else if (t.MESSAGING)
+    {
       t.removeWarning();
     }
     if (t.VIEW == t.SLIDE_VIEW) t.adjustSlide(sec);
@@ -1555,9 +1807,11 @@ var org_html_manager = {
   /**
    *  All undoable navigation commands should push the oposit here
    */
-  pushHistory: function (command, undo) {
+  pushHistory: function (command, undo)
+  {
     var t = this;
-    if (!t.SKIP_HISTORY) {
+    if (!t.SKIP_HISTORY)
+    {
       t.HISTORY[t.HIST_INDEX] = new Array(command, undo);
       t.HIST_INDEX = (t.HIST_INDEX + 1) % 50;
     }
@@ -1568,43 +1822,59 @@ var org_html_manager = {
   /**
    * only 'b' and 'B' trigger this one
    */
-  popHistory: function (foreward) {
+  popHistory: function (foreward)
+  {
     var t = this;
-    if (foreward) {
-      if (t.HISTORY[t.HIST_INDEX]) {
+    if (foreward)
+    {
+      if (t.HISTORY[t.HIST_INDEX])
+      {
         var s = parseInt(t.HISTORY[t.HIST_INDEX][0]);
-        if (!isNaN(s) || '?/toc/?' == t.HISTORY[t.HIST_INDEX][0]) {
+        if (!isNaN(s) || '?/toc/?' == t.HISTORY[t.HIST_INDEX][0])
+        {
           t.showSection(t.HISTORY[t.HIST_INDEX][0]);
           t.CONSOLE_INPUT.value = "";
-        } else {
+        }
+        else
+        {
           t.SKIP_HISTORY = true;
           t.CONSOLE_INPUT.value = t.HISTORY[t.HIST_INDEX][0];
           t.getKey();
         }
         t.HIST_INDEX = (t.HIST_INDEX + 1) % 50;
         t.HBO = 0;
-      } else if (t.HFO && history.length) history.forward();
-      else {
+      }
+      else if (t.HFO && history.length) history.forward();
+      else
+      {
         t.HFO = 1;
         t.warn(
           "History: No where to forward go from here. Any key and `B' to move to next file in history."
         );
       }
-    } else {
-      if (t.HISTORY[t.HIST_INDEX - 1]) {
+    }
+    else
+    {
+      if (t.HISTORY[t.HIST_INDEX - 1])
+      {
         t.HIST_INDEX = t.HIST_INDEX == 0 ? 49 : t.HIST_INDEX - 1;
         var s = parseInt(t.HISTORY[t.HIST_INDEX][1]);
-        if (!isNaN(s) || '?/toc/?' == t.HISTORY[t.HIST_INDEX][1]) {
+        if (!isNaN(s) || '?/toc/?' == t.HISTORY[t.HIST_INDEX][1])
+        {
           t.showSection(t.HISTORY[t.HIST_INDEX][1]);
           t.CONSOLE_INPUT.value = "";
-        } else {
+        }
+        else
+        {
           t.SKIP_HISTORY = true;
           t.CONSOLE_INPUT.value = t.HISTORY[t.HIST_INDEX][1];
           t.getKey();
         }
         t.HFO = 0;
-      } else if (t.HBO && history.length) history.back();
-      else {
+      }
+      else if (t.HBO && history.length) history.back();
+      else
+      {
         t.HBO = 1;
         t.warn(
           "History: No where to back go from here. Any key and `b' to move to previous file in history."
@@ -1615,7 +1885,8 @@ var org_html_manager = {
 
   
 
-  warn: function (what, harmless, value) {
+  warn: function (what, harmless, value)
+  {
     var t = this;
     if (null == value) value = "";
     t.CONSOLE_INPUT.value = value;
@@ -1626,12 +1897,14 @@ var org_html_manager = {
       "<span style='float:right;color:#aaaaaa;font-weight:normal;'>(press any key to proceed)</span>";
     t.showConsole();
     // wait until keyup was processed:
-    window.setTimeout(function () {
+    window.setTimeout(function ()
+    {
       org_html_manager.CONSOLE_INPUT.value = value;
     }, 50);
   },
 
-  startRead: function (command, label, value, shortcuts) {
+  startRead: function (command, label, value, shortcuts)
+  {
     var t = this;
     if (null == value) value = "";
     if (null == shortcuts) shortcuts = "";
@@ -1645,16 +1918,19 @@ var org_html_manager = {
     t.showConsole();
     document.onkeypress = null;
     t.CONSOLE_INPUT.focus();
-    t.CONSOLE_INPUT.onblur = function () {
+    t.CONSOLE_INPUT.onblur = function ()
+    {
       org_html_manager.CONSOLE_INPUT.focus();
     };
     // wait until keyup was processed:
-    window.setTimeout(function () {
+    window.setTimeout(function ()
+    {
       org_html_manager.CONSOLE_INPUT.value = value;
     }, 50);
   },
 
-  endRead: function (command, label) {
+  endRead: function (command, label)
+  {
     var t = this;
     t.READING = false;
     t.READ_COMMAND = "";
@@ -1663,22 +1939,28 @@ var org_html_manager = {
     document.onkeypress = OrgHtmlManagerKeyEvent;
   },
 
-  removeWarning: function () {
+  removeWarning: function ()
+  {
     var t = this;
     t.CONSOLE_LABEL.style.color = "#333333";
     t.hideConsole();
   },
 
-  showConsole: function () {
+  showConsole: function ()
+  {
     var t = this;
-    if (!t.MESSAGING) {
-      if (t.VIEW == t.PLAIN_VIEW) {
+    if (!t.MESSAGING)
+    {
+      if (t.VIEW == t.PLAIN_VIEW)
+      {
         // Maybe clone the CONSOLE?
         t.BODY.removeChild(t.BODY.firstChild);
         t.NODE.DIV.insertBefore(t.CONSOLE, t.NODE.DIV.firstChild);
         t.NODE.DIV.scrollIntoView(true);
         t.MESSAGING = t.MESSAGING_INPLACE;
-      } else {
+      }
+      else
+      {
         t.MESSAGING = t.MESSAGING_TOP;
         window.scrollTo(0, 0);
       }
@@ -1687,14 +1969,17 @@ var org_html_manager = {
     }
   },
 
-  hideConsole: function () {
+  hideConsole: function ()
+  {
     var t = this;
-    if (t.MESSAGING) {
+    if (t.MESSAGING)
+    {
       t.CONSOLE.style.marginTop = "-" + t.CONSOLE_OFFSET;
       t.CONSOLE.style.top = "-" + t.CONSOLE_OFFSET;
       t.CONSOLE_LABEL.innerHTML = "";
       t.CONSOLE_INPUT.value = "";
-      if (t.MESSAGING_INPLACE == t.MESSAGING) {
+      if (t.MESSAGING_INPLACE == t.MESSAGING)
+      {
         t.NODE.DIV.removeChild(t.NODE.DIV.firstChild);
         t.BODY.insertBefore(t.CONSOLE, t.BODY.firstChild);
         if (t.NODE.IDX != 0) t.NODE.DIV.scrollIntoView();
@@ -1708,12 +1993,15 @@ var org_html_manager = {
   /**
    * All commands that add something to the history should return.
    */
-  getKey: function () {
+  getKey: function ()
+  {
     var t = this;
     var s = t.CONSOLE_INPUT.value;
     // return, if s is empty:
-    if (0 == s.length) {
-      if (t.HELPING) {
+    if (0 == s.length)
+    {
+      if (t.HELPING)
+      {
         t.showHelp();
         return;
       }
@@ -1723,14 +2011,19 @@ var org_html_manager = {
 
     // the easiest is to just drop everything and clean the console.
     // User has to retype again.
-    if (t.MESSAGING && !t.READING) {
+    if (t.MESSAGING && !t.READING)
+    {
       t.removeWarning();
       return;
-    } else if (t.HELPING) {
+    }
+    else if (t.HELPING)
+    {
       t.showHelp();
       t.CONSOLE_INPUT.value = "";
       return;
-    } else if (t.READING) {
+    }
+    else if (t.READING)
+    {
       return;
     }
 
@@ -1739,11 +2032,16 @@ var org_html_manager = {
 
     // Always remove TOC from history, if HIDE_TOC
     if (t.HIDE_TOC && t.TOC == t.NODE && "v" != s && "V" != s &&
-      "\t" != s) {
+      "\t" != s)
+    {
       s = "b";
-    } else if ("\t" == s) {
+    }
+    else if ("\t" == s)
+    {
       return true;
-    } else {
+    }
+    else
+    {
       s = t.trim(s);
     }
 
@@ -1751,44 +2049,69 @@ var org_html_manager = {
 
     if (1 == s.length) // one char wide commands
     {
-      if ('b' == s) {
+      if ('b' == s)
+      {
         t.popHistory();
-      } else if ('B' == s) {
+      }
+      else if ('B' == s)
+      {
         t.popHistory(true);
-      } else if ('c' == s) {
+      }
+      else if ('c' == s)
+      {
         t.removeSearchHighlight();
-        if (t.VIEW == t.INFO_VIEW || t.VIEW == t.SLIDE_VIEW) {
+        if (t.VIEW == t.INFO_VIEW || t.VIEW == t.SLIDE_VIEW)
+        {
           // redisplay in info view mode:
           t.showSection(t.NODE.IDX);
         }
-      } else if ('i' == s) {
-        if (!t.FIXED_TOC) {
+      }
+      else if ('i' == s)
+      {
+        if (!t.FIXED_TOC)
+        {
           if (t.HIDE_TOC) t.navigateTo('?/toc/?');
           // No cloning here:
           else if (0 != t.NODE.IDX) t.navigateTo(0);
         }
         if (null != t.TOC_LINK) t.TOC_LINK.focus();
-      } else if ('m' == s) {
+      }
+      else if ('m' == s)
+      {
         t.toggleView(t.NODE.IDX);
         return;
-      } else if ('x' == s) {
+      }
+      else if ('x' == s)
+      {
         t.slideView(t.NODE.IDX);
-      } else if ('n' == s) {
-        if (t.NODE.STATE == OrgNode.STATE_FOLDED && t.VIEW == t.PLAIN_VIEW) {
+      }
+      else if ('n' == s)
+      {
+        if (t.NODE.STATE == OrgNode.STATE_FOLDED && t.VIEW == t.PLAIN_VIEW)
+        {
           t.showSection(t.NODE.IDX);
-        } else if (t.NODE.IDX < t.SECS.length - 1) {
+        }
+        else if (t.NODE.IDX < t.SECS.length - 1)
+        {
           t.navigateTo(t.NODE.IDX + 1);
-        } else {
+        }
+        else
+        {
           t.warn("Already last section.");
           return; // rely on what happends if messaging
         }
-      } else if ('N' == s) {
-        if (t.NODE.IDX < t.SECS.length - 1) {
+      }
+      else if ('N' == s)
+      {
+        if (t.NODE.IDX < t.SECS.length - 1)
+        {
           var d = t.NODE.DEPTH;
           var idx = t.NODE.IDX + 1;
           while (idx < t.SECS.length - 1 && t.SECS[idx].DEPTH >=
-            d) {
-            if (t.SECS[idx].DEPTH == d) {
+            d)
+          {
+            if (t.SECS[idx].DEPTH == d)
+            {
               t.navigateTo(idx);
               return;
             }
@@ -1797,19 +2120,29 @@ var org_html_manager = {
         }
         t.warn("No next sibling.");
         return; // rely on what happends if messaging
-      } else if ('p' == s) {
-        if (t.NODE.IDX > 0) {
+      }
+      else if ('p' == s)
+      {
+        if (t.NODE.IDX > 0)
+        {
           t.navigateTo(t.NODE.IDX - 1);
-        } else {
+        }
+        else
+        {
           t.warn("Already first section.");
           return; // rely on what happends if messaging
         }
-      } else if ('P' == s) {
-        if (t.NODE.IDX > 0) {
+      }
+      else if ('P' == s)
+      {
+        if (t.NODE.IDX > 0)
+        {
           var d = t.NODE.DEPTH;
           var idx = t.NODE.IDX - 1;
-          while (idx >= 0 && t.SECS[idx].DEPTH >= d) {
-            if (t.SECS[idx].DEPTH == d) {
+          while (idx >= 0 && t.SECS[idx].DEPTH >= d)
+          {
+            if (t.SECS[idx].DEPTH == d)
+            {
               t.navigateTo(idx);
               return;
             }
@@ -1817,19 +2150,32 @@ var org_html_manager = {
           }
         }
         t.warn("No previous sibling.");
-      } else if ('q' == s) {
-        if (window.confirm("Really close this file?")) {
+      }
+      else if ('q' == s)
+      {
+        if (window.confirm("Really close this file?"))
+        {
           window.close();
         }
-      } else if ('<' == s || 't' == s) {
+      }
+      else if ('<' == s || 't' == s)
+      {
         if (0 != t.NODE.IDX) t.navigateTo(0);
-        else window.scrollTo(0, 0);
-      } else if ('>' == s || 'E' == s || 'e' == s) {
+        else
+        {
+          t.warn("Already at Table of Contents.");
+          window.scrollTo(0, 0);
+        }
+      }
+      else if ('>' == s || 'E' == s || 'e' == s)
+      {
         if ((t.SECS.length - 1) != t.NODE.IDX) t.navigateTo(t.SECS
           .length -
           1);
         else t.SECS[t.SECS.length - 1].DIV.scrollIntoView(true);
-      } else if ('v' == s) {
+      }
+      else if ('v' == s)
+      {
         if (window.innerHeight)
           window.scrollBy(0, window.innerHeight - 30);
         else if (document.documentElement.clientHeight)
@@ -1837,7 +2183,9 @@ var org_html_manager = {
             30);
         else
           window.scrollBy(0, document.body.clientHeight - 30);
-      } else if ('V' == s) {
+      }
+      else if ('V' == s)
+      {
         if (window.innerHeight)
           window.scrollBy(0, -(window.innerHeight - 30));
         else if (document.documentElement.clientHeight)
@@ -1845,14 +2193,26 @@ var org_html_manager = {
             30));
         else
           window.scrollBy(0, -(document.body.clientHeight - 30));
-      } else if ('u' == s) {
-        if (t.NODE.PARENT != t.ROOT) {
+      }
+      else if ('u' == s)
+      {
+        if (t.NODE.PARENT != t.ROOT)
+        {
           t.NODE = t.NODE.PARENT;
           t.showSection(t.NODE.IDX);
-        } else {
-          if (0 != t.NODE.IDX) t.navigateTo(0);
         }
-      } else if ('W' == s) {
+        else
+        {
+          if (0 != t.NODE.IDX) t.navigateTo(0);
+          else
+          {
+            t.warn("Already at top node.");
+            window.scrollTo(0, 0);
+          }
+        }
+      }
+      else if ('W' == s)
+      {
         t.plainView(t.NODE.IDX);
         t.ROOT.DIRTY = true;
         t.ROOT_STATE = OrgNode.STATE_UNFOLDED;
@@ -1860,34 +2220,52 @@ var org_html_manager = {
         t.toggleGlobally();
         t.toggleGlobally();
         window.print();
-      } else if ('f' == s) {
-        if (t.VIEW != t.INFO_VIEW) {
+      }
+      else if ('f' == s)
+      {
+        if (t.VIEW != t.INFO_VIEW)
+        {
           t.NODE.fold();
           t.NODE.DIV.scrollIntoView(true);
         }
-      } else if ('F' == s) {
-        if (t.VIEW != t.INFO_VIEW) {
+      }
+      else if ('F' == s)
+      {
+        if (t.VIEW != t.INFO_VIEW)
+        {
           t.toggleGlobally();
           t.NODE.DIV.scrollIntoView(true);
         }
-      } else if ('?' == s || '¿' == s) {
+      }
+      else if ('?' == s || '¿' == s)
+      {
         t.showHelp();
-      } else if ('C' == s) {
+      }
+      else if ('C' == s)
+      {
         if (t.SORTED_TAGS.length) t.showTagsIndex();
         else t.warn("No Tags found.");
-      } else if ('H' == s && t.LINK_HOME) {
+      }
+      else if ('H' == s && t.LINK_HOME)
+      {
         window.document.location.href = t.LINK_HOME;
-      } else if ('h' == s && t.LINK_UP) {
+      }
+      else if ('h' == s && t.LINK_UP)
+      {
         window.document.location.href = t.LINK_UP;
       }
 
       /* === READ COMMANDS === */
-      else if ('l' == s) {
-        if ("" != t.OCCUR) {
+      else if ('l' == s)
+      {
+        if ("" != t.OCCUR)
+        {
           t.startRead(t.READ_COMMAND_HTML_LINK,
             "Choose HTML-link type: 's' = section, 'o' = occur"
           );
-        } else {
+        }
+        else
+        {
           t.startRead(s, "HTML-link:",
             '<a href="' + t.BASE_URL + t.getDefaultTarget() +
             '">' +
@@ -1895,86 +2273,120 @@ var org_html_manager = {
               .innerHTML) +
             "'</a>",
             "C-c to copy, ");
-          window.setTimeout(function () {
+          window.setTimeout(function ()
+          {
             org_html_manager.CONSOLE_INPUT.select();
           }, 100);
         }
         return;
-      } else if ('L' == s) {
-        if ("" != t.OCCUR) {
+      }
+      else if ('L' == s)
+      {
+        if ("" != t.OCCUR)
+        {
           t.startRead(t.READ_COMMAND_ORG_LINK,
             "Choose Org-link type: 's' = section, 'o' = occur");
-        } else {
+        }
+        else
+        {
           t.startRead(s, "Org-link:",
             '[[' + t.BASE_URL + t.getDefaultTarget() + '][' +
             document.title + ", Sec. '" + t.removeTags(t.NODE.HEADING
               .innerHTML) +
             "']]",
             "C-c to copy, ");
-          window.setTimeout(function () {
+          window.setTimeout(function ()
+          {
             org_html_manager.CONSOLE_INPUT.select();
           }, 100);
         }
         return;
-      } else if ('U' == s) {
-        if ("" != t.OCCUR) {
+      }
+      else if ('U' == s)
+      {
+        if ("" != t.OCCUR)
+        {
           t.startRead(t.READ_COMMAND_PLAIN_URL_LINK,
             "Choose Org-link type: 's' = section, 'o' = occur");
-        } else {
+        }
+        else
+        {
           t.startRead(s, "Plain URL Link:", t.BASE_URL + t.getDefaultTarget(),
             "C-c to copy, ");
-          window.setTimeout(function () {
+          window.setTimeout(function ()
+          {
             org_html_manager.CONSOLE_INPUT.select();
           }, 100);
         }
         return;
-      } else if ('g' == s) {
+      }
+      else if ('g' == s)
+      {
         t.startRead(s, "Enter section number:");
         return;
-      } else if ('o' == s) {
+      }
+      else if ('o' == s)
+      {
         if ("" != t.OCCUR) t.startRead(s, "Occur:", t.OCCUR,
           "RET to use previous, DEL ");
         else t.startRead(s, "Occur:", t.OCCUR);
-        window.setTimeout(function () {
+        window.setTimeout(function ()
+        {
           org_html_manager.CONSOLE_INPUT.value =
             org_html_manager.OCCUR;
           org_html_manager.CONSOLE_INPUT.select();
         }, 100);
         return;
-      } else if ('s' == s) {
+      }
+      else if ('s' == s)
+      {
         if ("" != t.OCCUR) t.startRead(s, "Search forward:", t.OCCUR,
           "RET to use previous, DEL ");
         else t.startRead(s, "Search forward:", t.OCCUR);
-        window.setTimeout(function () {
+        window.setTimeout(function ()
+        {
           org_html_manager.CONSOLE_INPUT.value =
             org_html_manager.OCCUR;
           org_html_manager.CONSOLE_INPUT.select();
         }, 100);
         return;
-      } else if ('S' == s) {
-        if ("" == t.OCCUR) {
+      }
+      else if ('S' == s)
+      {
+        if ("" == t.OCCUR)
+        {
           s = "s";
           t.startRead(s, "Search forward:");
-        } else {
+        }
+        else
+        {
           t.READ_COMMAND = s;
           t.evalReadCommand();
         }
         return;
-      } else if ('r' == s) {
+      }
+      else if ('r' == s)
+      {
         if ("" != t.OCCUR) t.startRead(s, "Search backwards:", t.OCCUR,
           "RET to use previous, DEL ");
         else t.startRead(s, "Search backwards:", t.OCCUR);
-        window.setTimeout(function () {
+        window.setTimeout(function ()
+        {
           org_html_manager.CONSOLE_INPUT.value =
             org_html_manager.OCCUR;
           org_html_manager.CONSOLE_INPUT.select();
         }, 100);
         return;
-      } else if ('R' == s) {
-        if ("" == t.OCCUR) {
+      }
+      else if ('R' == s)
+      {
+        if ("" == t.OCCUR)
+        {
           s = "r";
           t.startRead(s, "Search backwards:");
-        } else {
+        }
+        else
+        {
           t.READ_COMMAND = s;
           t.evalReadCommand();
         }
@@ -1989,30 +2401,36 @@ var org_html_manager = {
    * Please return, if you want the minibuffer to stay on screen.
    * Remember to call this.endRead()!
    */
-  evalReadCommand: function () {
+  evalReadCommand: function ()
+  {
     var t = this;
     var command = t.READ_COMMAND;
     var result = t.trim(t.CONSOLE_INPUT.value);
 
     t.endRead();
 
-    if ("" == command || "" == result) {
+    if ("" == command || "" == result)
+    {
       t.hideConsole();
       return;
     }
 
     // VALID INPUT? COMMANDS FOLLOW HERE
 
-    if (command == 'g') { // goto section
+    if (command == 'g')
+    { // goto section
       var sec = t.SECNUM_MAP[result];
-      if (null != sec) {
+      if (null != sec)
+      {
         t.hideConsole();
         t.navigateTo(sec.IDX);
         return;
       }
       t.warn("Goto section: no such section.", false, result);
       return;
-    } else if (command == 's') { // search
+    }
+    else if (command == 's')
+    { // search
       if ("" == result) return false;
       if (t.SEARCH_HIGHLIGHT_ON) t.removeSearchHighlight();
       var restore = t.OCCUR;
@@ -2020,8 +2438,10 @@ var org_html_manager = {
       if (result == t.OCCUR) plus++;
       t.OCCUR = result;
       t.makeSearchRegexp();
-      for (var i = t.NODE.IDX + plus; i < t.SECS.length; ++i) {
-        if (t.searchTextInOrgNode(i)) {
+      for (var i = t.NODE.IDX + plus; i < t.SECS.length; ++i)
+      {
+        if (t.searchTextInOrgNode(i))
+        {
           t.OCCUR = result;
           t.hideConsole();
           t.navigateTo(t.SECS[i].IDX);
@@ -2031,9 +2451,13 @@ var org_html_manager = {
       t.warn("Search forwards: text not found.", false, t.OCCUR);
       t.OCCUR = restore;
       return;
-    } else if (command == 'S') { // repeat search
-      for (var i = t.NODE.IDX + 1; i < t.SECS.length; ++i) {
-        if (t.searchTextInOrgNode(i)) {
+    }
+    else if (command == 'S')
+    { // repeat search
+      for (var i = t.NODE.IDX + 1; i < t.SECS.length; ++i)
+      {
+        if (t.searchTextInOrgNode(i))
+        {
           t.hideConsole();
           t.navigateTo(t.SECS[i].IDX);
           return;
@@ -2041,7 +2465,9 @@ var org_html_manager = {
       }
       t.warn("Search forwards: text not found.", false, t.OCCUR);
       return;
-    } else if (command == 'r') { // search backwards
+    }
+    else if (command == 'r')
+    { // search backwards
       if ("" == result) return false;
       if (t.SEARCH_HIGHLIGHT_ON) t.removeSearchHighlight();
       var restore = t.OCCUR;
@@ -2049,8 +2475,10 @@ var org_html_manager = {
       var plus = 0;
       if (result == t.OCCUR) plus++;
       t.makeSearchRegexp();
-      for (var i = t.NODE.IDX - plus; i > -1; --i) {
-        if (t.searchTextInOrgNode(i)) {
+      for (var i = t.NODE.IDX - plus; i > -1; --i)
+      {
+        if (t.searchTextInOrgNode(i))
+        {
           t.hideConsole();
           t.navigateTo(t.SECS[i].IDX);
           return;
@@ -2059,10 +2487,14 @@ var org_html_manager = {
       t.warn("Search backwards: text not found.", false, t.OCCUR);
       t.OCCUR = restore;
       return;
-    } else if (command == 'R') { // repeat search backwards
-      for (var i = t.NODE.IDX - 1; i > -1; --i) {
+    }
+    else if (command == 'R')
+    { // repeat search backwards
+      for (var i = t.NODE.IDX - 1; i > -1; --i)
+      {
         result = t.removeTags(t.SECS[i].HEADING.innerHTML);
-        if (t.searchTextInOrgNode(i)) {
+        if (t.searchTextInOrgNode(i))
+        {
           t.hideConsole();
           t.navigateTo(t.SECS[i].IDX);
           return;
@@ -2070,19 +2502,24 @@ var org_html_manager = {
       }
       t.warn("Search backwards: text not found.", false, t.OCCUR);
       return;
-    } else if (command == 'o') { // occur
+    }
+    else if (command == 'o')
+    { // occur
       if ("" == result) return false;
       if (t.SEARCH_HIGHLIGHT_ON) t.removeSearchHighlight();
       var restore = t.OCCUR;
       t.OCCUR = result;
       t.makeSearchRegexp();
       var occurs = new Array();
-      for (var i = 0; i < t.SECS.length; ++i) {
-        if (t.searchTextInOrgNode(i)) {
+      for (var i = 0; i < t.SECS.length; ++i)
+      {
+        if (t.searchTextInOrgNode(i))
+        {
           occurs.push(i);
         }
       }
-      if (0 == occurs.length) {
+      if (0 == occurs.length)
+      {
         t.warn("Occur: text not found.", false, t.OCCUR);
         t.OCCUR = restore;
         return;
@@ -2092,17 +2529,22 @@ var org_html_manager = {
       if (t.PLAIN_VIEW != t.VIEW) t.plainView();
       t.ROOT.DIRTY = true;
       t.toggleGlobally();
-      for (var i = 0; i < t.SECS.length; ++i) {
+      for (var i = 0; i < t.SECS.length; ++i)
+      {
         OrgNode.showElement(t.SECS[i].DIV);
         OrgNode.hideElement(t.SECS[i].FOLDER);
       }
-      for (var i = (occurs.length - 1); i >= 1; --i) {
+      for (var i = (occurs.length - 1); i >= 1; --i)
+      {
         OrgNode.showElement(t.SECS[occurs[i]].FOLDER);
       }
       t.showSection(occurs[0]);
-    } else if (command == t.READ_COMMAND_ORG_LINK) {
+    }
+    else if (command == t.READ_COMMAND_ORG_LINK)
+    {
       var c = result.charAt(0);
-      if ('s' == c) {
+      if ('s' == c)
+      {
         t.startRead(t.READ_COMMAND_NULL,
           "Org-link to this section:",
           '[[' + t.BASE_URL + t.getDefaultTarget() + '][' +
@@ -2110,10 +2552,13 @@ var org_html_manager = {
             .innerHTML) +
           "']]",
           "C-c to copy, ");
-        window.setTimeout(function () {
+        window.setTimeout(function ()
+        {
           org_html_manager.CONSOLE_INPUT.select();
         }, 100);
-      } else if ('o' == c) {
+      }
+      else if ('o' == c)
+      {
         t.startRead(t.READ_COMMAND_NULL,
           "Org-link, occurences of <i>&quot;" + t.OCCUR +
           "&quot;</i>:",
@@ -2121,15 +2566,21 @@ var org_html_manager = {
           document.title + ", occurences of '" + t.OCCUR +
           "']]",
           "C-c to copy, ");
-        window.setTimeout(function () {
+        window.setTimeout(function ()
+        {
           org_html_manager.CONSOLE_INPUT.select();
         }, 100);
-      } else {
+      }
+      else
+      {
         t.warn(c + ": No such link type!");
       }
-    } else if (command == t.READ_COMMAND_HTML_LINK) {
+    }
+    else if (command == t.READ_COMMAND_HTML_LINK)
+    {
       var c = result.charAt(0);
-      if ('s' == c) {
+      if ('s' == c)
+      {
         t.startRead(t.READ_COMMAND_NULL,
           "HTML-link to this section:",
           '<a href="' + t.BASE_URL + t.getDefaultTarget() +
@@ -2138,10 +2589,13 @@ var org_html_manager = {
             .innerHTML) +
           "'</a>",
           "C-c to copy, ");
-        window.setTimeout(function () {
+        window.setTimeout(function ()
+        {
           org_html_manager.CONSOLE_INPUT.select();
         }, 100);
-      } else if ('o' == c) {
+      }
+      else if ('o' == c)
+      {
         t.startRead(t.READ_COMMAND_NULL,
           "HTML-link, occurences of <i>&quot;" + t.OCCUR +
           "&quot;</i>:",
@@ -2149,43 +2603,58 @@ var org_html_manager = {
           document.title + ", occurences of '" + t.OCCUR +
           "'</a>",
           "C-c to copy, ");
-        window.setTimeout(function () {
+        window.setTimeout(function ()
+        {
           org_html_manager.CONSOLE_INPUT.select();
         }, 100);
-      } else {
+      }
+      else
+      {
         t.warn(c + ": No such link type!");
       }
-    } else if (command == t.READ_COMMAND_PLAIN_URL_LINK) {
+    }
+    else if (command == t.READ_COMMAND_PLAIN_URL_LINK)
+    {
       var c = result.charAt(0);
-      if ('s' == c) {
+      if ('s' == c)
+      {
         t.startRead(t.READ_COMMAND_NULL,
           "Plain-link to this section:",
           t.BASE_URL + t.getDefaultTarget(),
           "C-c to copy, ");
-        window.setTimeout(function () {
+        window.setTimeout(function ()
+        {
           org_html_manager.CONSOLE_INPUT.select();
         }, 100);
-      } else if ('o' == c) {
+      }
+      else if ('o' == c)
+      {
         t.startRead(t.READ_COMMAND_NULL,
           "Plain-link, occurences of <i>&quot;" + t.OCCUR +
           "&quot;</i>:",
           t.BASE_URL + "?OCCUR=" + t.OCCUR,
           "C-c to copy, ");
-        window.setTimeout(function () {
+        window.setTimeout(function ()
+        {
           org_html_manager.CONSOLE_INPUT.select();
         }, 100);
-      } else {
+      }
+      else
+      {
         t.warn(c + ": No such link type!");
       }
     }
 
   },
 
-  getDefaultTarget: function (node) {
+  getDefaultTarget: function (node)
+  {
     if (null == node) node = this.NODE;
     var loc = "#" + this.NODE.BASE_ID;
-    for (var s in node.isTargetFor) {
-      if (!s.match(this.SID_REGEX)) {
+    for (var s in node.isTargetFor)
+    {
+      if (!s.match(this.SID_REGEX))
+      {
         loc = s;
         break;
       }
@@ -2195,7 +2664,8 @@ var org_html_manager = {
 
   
 
-  makeSearchRegexp: function () {
+  makeSearchRegexp: function ()
+  {
     var tmp = this.OCCUR.replace(/>/g, "&gt;")
       .
     replace(/</g, "&lt;")
@@ -2217,17 +2687,21 @@ var org_html_manager = {
       ")([^>]*)?<", "ig");
   },
 
-  searchTextInOrgNode: function (i) {
+  searchTextInOrgNode: function (i)
+  {
     var t = this;
     var ret = false;
-    if (null != t.SECS[i]) {
-      if (t.SEARCH_REGEX.test(t.SECS[i].HEADING.innerHTML)) {
+    if (null != t.SECS[i])
+    {
+      if (t.SEARCH_REGEX.test(t.SECS[i].HEADING.innerHTML))
+      {
         ret = true;
         t.setSearchHighlight(t.SECS[i].HEADING);
         t.SECS[i].HAS_HIGHLIGHT = true;
         t.SEARCH_HIGHLIGHT_ON = true;
       }
-      if (t.SEARCH_REGEX.test(t.SECS[i].FOLDER.innerHTML)) {
+      if (t.SEARCH_REGEX.test(t.SECS[i].FOLDER.innerHTML))
+      {
         ret = true;
         t.setSearchHighlight(t.SECS[i].FOLDER);
         t.SECS[i].HAS_HIGHLIGHT = true;
@@ -2238,24 +2712,30 @@ var org_html_manager = {
     return false;
   },
 
-  setSearchHighlight: function (dom) {
+  setSearchHighlight: function (dom)
+  {
     var tmp = dom.innerHTML;
     dom.innerHTML = tmp.replace(this.SEARCH_REGEX,
       '>$1<span class="org-info-js_search-highlight">$2</span>$3<'
     );
   },
 
-  removeSearchHighlight: function () {
+  removeSearchHighlight: function ()
+  {
     var t = this;
-    for (var i = 0; i < t.SECS.length; ++i) {
-      if (t.SECS[i].HAS_HIGHLIGHT) {
+    for (var i = 0; i < t.SECS.length; ++i)
+    {
+      if (t.SECS[i].HAS_HIGHLIGHT)
+      {
         var tmp;
-        while (t.SEARCH_HL_REGEX.test(t.SECS[i].HEADING.innerHTML)) {
+        while (t.SEARCH_HL_REGEX.test(t.SECS[i].HEADING.innerHTML))
+        {
           tmp = t.SECS[i].HEADING.innerHTML;
           t.SECS[i].HEADING.innerHTML = tmp.replace(t.SEARCH_HL_REGEX,
             '$2');
         }
-        while (t.SEARCH_HL_REGEX.test(t.SECS[i].FOLDER.innerHTML)) {
+        while (t.SEARCH_HL_REGEX.test(t.SECS[i].FOLDER.innerHTML))
+        {
           tmp = t.SECS[i].FOLDER.innerHTML;
           t.SECS[i].FOLDER.innerHTML = tmp.replace(t.SEARCH_HL_REGEX,
             '$2');
@@ -2268,9 +2748,11 @@ var org_html_manager = {
 
   
 
-  highlightHeadline: function (h) {
+  highlightHeadline: function (h)
+  {
     var i = parseInt(h);
-    if (this.PLAIN_VIEW == this.VIEW && this.MOUSE_HINT) {
+    if (this.PLAIN_VIEW == this.VIEW && this.MOUSE_HINT)
+    {
       if ('underline' == this.MOUSE_HINT)
         this.SECS[i].HEADING.style.borderBottom =
         "1px dashed #666666";
@@ -2279,19 +2761,26 @@ var org_html_manager = {
     }
   },
 
-  unhighlightHeadline: function (h) {
+  unhighlightHeadline: function (h)
+  {
     var i = parseInt(h);
-    if ('underline' == this.MOUSE_HINT) {
+    if ('underline' == this.MOUSE_HINT)
+    {
       this.SECS[i].HEADING.style.borderBottom = "";
-    } else
+    }
+    else
       this.SECS[i].HEADING.style.backgroundColor = "";
   },
 
-  showHelp: function () {
+  showHelp: function ()
+  {
     var t = this;
-    if (t.READING) {
+    if (t.READING)
+    {
       t.endRead();
-    } else if (t.MESSAGING) {
+    }
+    else if (t.MESSAGING)
+    {
       t.removeWarning();
     }
     /* This is an OrgMode version of the table. Turn on orgtbl-mode in
@@ -2328,7 +2817,8 @@ var org_html_manager = {
       | W            | Print                                                   |
       */
     t.HELPING = t.HELPING ? 0 : 1;
-    if (t.HELPING) {
+    if (t.HELPING)
+    {
       t.LAST_VIEW_MODE = t.VIEW;
       if (t.PLAIN_VIEW == t.VIEW) t.infoView(true);
       t.WINDOW.innerHTML =
@@ -2370,33 +2860,45 @@ var org_html_manager = {
         + '</tbody>' +
         '</table><br />Press any key or <a href=\"#help\" onclick="org_html_manager.showHelp();">click here</a> to proceed.';
       window.scrollTo(0, 0);
-    } else {
-      if (t.PLAIN_VIEW == t.LAST_VIEW_MODE) {
+    }
+    else
+    {
+      if (t.PLAIN_VIEW == t.LAST_VIEW_MODE)
+      {
         t.plainView();
-      } else if (t.SLIDE_VIEW == t.LAST_VIEW_MODE) {
+      }
+      else if (t.SLIDE_VIEW == t.LAST_VIEW_MODE)
+      {
         t.slideView();
       }
       t.showSection(t.NODE.IDX);
     }
   },
 
-  showTagsIndex: function () {
+  showTagsIndex: function ()
+  {
     var t = this;
-    if (t.READING) {
+    if (t.READING)
+    {
       t.endRead();
-    } else if (t.MESSAGING) {
+    }
+    else if (t.MESSAGING)
+    {
       t.removeWarning();
     }
     t.HELPING = t.HELPING ? 0 : 1;
-    if (t.HELPING) {
+    if (t.HELPING)
+    {
       t.LAST_VIEW_MODE = t.VIEW;
       if (t.PLAIN_VIEW == t.VIEW) t.infoView(true);
-      if (null == t.TAGS_INDEX) {
+      if (null == t.TAGS_INDEX)
+      {
         t.TAGS_INDEX =
           'Press any key or <a href="#tags" onclick="javascript:org_html_manager.showTagsIndex();">click here</a> to proceed.' +
           '<br /><br />Click the headlines to expand the contents.' +
           '<h2>Index of Tags</h2>';
-        for (var i = 0; i < t.SORTED_TAGS.length; ++i) {
+        for (var i = 0; i < t.SORTED_TAGS.length; ++i)
+        {
           var tag = t.SORTED_TAGS[i];
           var fid = 'org-html-manager-sorted-tags-' + tag;
           t.TAGS_INDEX +=
@@ -2405,10 +2907,12 @@ var org_html_manager = {
             fid + '\'));"><h3>' + tag + '</h3></a>' + '<div id="' +
             fid +
             '" style="visibility:hidden;display:none;"><ul>';
-          for (var j = 0; j < t.TAGS[tag].length; ++j) {
+          for (var j = 0; j < t.TAGS[tag].length; ++j)
+          {
             var idx = t.TAGS[tag][j];
             var heading = t.SECS[idx].BASE_ID;
-            if (heading === null || heading === undefined) {
+            if (heading === null || heading === undefined)
+            {
               heading = "";
             }
             t.TAGS_INDEX +=
@@ -2426,10 +2930,15 @@ var org_html_manager = {
       }
       t.WINDOW.innerHTML = t.TAGS_INDEX;
       window.scrollTo(0, 0);
-    } else {
-      if (t.PLAIN_VIEW == t.LAST_VIEW_MODE) {
+    }
+    else
+    {
+      if (t.PLAIN_VIEW == t.LAST_VIEW_MODE)
+      {
         t.plainView();
-      } else if (t.SLIDE_VIEW == t.LAST_VIEW_MODE) {
+      }
+      else if (t.SLIDE_VIEW == t.LAST_VIEW_MODE)
+      {
         t.slideView();
       }
       t.showSection(t.NODE.IDX);
@@ -2450,9 +2959,12 @@ var org_html_manager = {
    *             The first argument passed to the hook is the OrgHtmlManager
    *             itself.
    */
-  runHooks: function (name, args) {
-    if (this.HOOKS.run_hooks && this.HOOKS[name]) {
-      for (var i = 0; i < this.HOOKS[name].length; ++i) {
+  runHooks: function (name, args)
+  {
+    if (this.HOOKS.run_hooks && this.HOOKS[name])
+    {
+      for (var i = 0; i < this.HOOKS[name].length; ++i)
+      {
         this.HOOKS[name][i](this, args);
       }
     }
@@ -2464,8 +2976,10 @@ var org_html_manager = {
    * @param name Name of the hook, i.e. the index in <code>this.HOOKS</code>.
    * @param func The function object.
    */
-  addHook: function (name, func) {
-    if ('run_hooks' != name) {
+  addHook: function (name, func)
+  {
+    if ('run_hooks' != name)
+    {
       this.HOOKS[name].push(func);
     }
   },
@@ -2476,10 +2990,14 @@ var org_html_manager = {
    * @param func The function object to be removed from the hook.  JavaScript
    *             considers two functions written the same way identical.
    */
-  removeHook: function (name, func) {
-    if (this.HOOKS[name]) {
-      for (var i = this.HOOKS[name].length - 1; i >= 0; --i) {
-        if (this.HOOKS[name][i] == func) {
+  removeHook: function (name, func)
+  {
+    if (this.HOOKS[name])
+    {
+      for (var i = this.HOOKS[name].length - 1; i >= 0; --i)
+      {
+        if (this.HOOKS[name][i] == func)
+        {
           this.HOOKS[name].splice(i, 1);
         }
       }
@@ -2490,7 +3008,8 @@ var org_html_manager = {
 
 
 
-function OrgHtmlManagerKeyEvent(e) {
+function OrgHtmlManagerKeyEvent(e)
+{
   var c;
   if (!e) e = window.event;
   if (e.which) c = e.which;
@@ -2516,6 +3035,7 @@ function OrgHtmlManagerKeyEvent(e) {
  * In Opera document.body is true, even if not loaded (try with big big
  * file). This case is handled by the OrgHtmlManager class itself.
  */
-function OrgHtmlManagerLoadCheck() {
+function OrgHtmlManagerLoadCheck()
+{
   org_html_manager.init();
 }
