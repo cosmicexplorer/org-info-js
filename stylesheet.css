@@ -30,23 +30,58 @@ div {
   text-align: left;
 }
 
-a {
-  text-decoration: none;
+a:not(.org-tag) {
   cursor: pointer;
   color: #0000AA;
   font-style: italic;
+  text-decoration: underline;
 }
 
-a:hover {
-  text-decoration: underline;
+a:hover:not(.org-tag) {
+  text-decoration: none;
   cursor: pointer;
+}
+
+a:hover:not(.org-tag) {
   color: #0000AA;
 }
 
 a:visited {
-  text-decoration: none;
   cursor: pointer;
-  color: #0000AA;
+}
+
+a:visited:not(.org-tag) {
+  color: #660066;
+}
+
+a.org-tag {
+  font-size: 9pt;
+  font-weight: normal;
+  font-style: italic;
+  color: orange;
+}
+
+a.page-header {
+  color: black !important;
+  text-decoration: none !important;
+}
+
+h1 a.none,
+h2 a.none,
+h3 a.none,
+h4 a.none,
+h5 a.none,
+h6 a.none {
+  font-family: Verdana, Arial, sans-serif;
+  font-weight: bold;
+  color: #104d8c !important;
+  text-align: left;
+}
+
+.none {
+  display: inline-block !important;
+  text-decoration: none !important;
+  font-style: normal !important;
 }
 
 img,
@@ -263,8 +298,7 @@ div#postamble {
   font-size: 0.78em;
 }
 
-#postamble table tr td.source {
-}
+#postamble table tr td.source {}
 /* Styles for htmlize.el */
 
 .comment {
