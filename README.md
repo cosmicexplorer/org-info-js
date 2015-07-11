@@ -11,4 +11,4 @@ What I've added so far:
 3. All headings are now links as well, although I played with the css (in a horribly hacky way) to make them look like headings, not links.
 4. Make `u` and `t` keyboard commands display a warning at the top level; I thought it was better than doing nothing at all. Also, `u` will now go to the table of contents if you press it from a top-level node.
 
-Working on this has actually been much easier than I expected, so props to the guy who first wrote this.
+Working on this has actually been much easier than I expected, so props to the guy who first wrote this. If anything feels broken, totally bring it up, cause this was written a while ago and org-mode has slightly tweaked its html output since then. I've made some fixes, but I don't imagine I've found them all.

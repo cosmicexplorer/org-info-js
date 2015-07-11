@@ -94,14 +94,30 @@ function OrgNode(_div, _heading, _link, _depth, _parent, _base_id,
     t.hide();
   }
 
-  var folder = document.getElementById("text-" + t.BASE_ID);
-  if (null == folder && _base_id)
+  // move any potential top-level text to TOC
+  if (_div && _div.id === "table-of-contents")
   {
-    var fid = _base_id.substring(4);
-    folder = document.getElementById("text-" + fid); // try old schema
+    var upperText = document.querySelectorAll(
+      "div#content > p:nth-child(3)");
+    if (upperText.length > 0)
+    {
+      document.getElementById("text-table-of-contents")
+        .appendChild(
+          upperText[0]);
+    }
   }
-  if (null != folder)
-    t.FOLDER = folder;
+
+  var folder = _div && _div.querySelectorAll("[id^=text-]")[0];
+  if (!folder && _base_id)
+  {
+    folder = document.getElementById("text-" + t.BASE_ID);
+    if (!folder)
+    { // try old schema
+      var fid = _base_id.substring(4);
+      folder = document.getElementById("text-" + fid);
+    }
+  }
+  if (folder) t.FOLDER = folder;
 
   t.isTargetFor = new Object();
   t.isTargetFor['#' + t.BASE_ID] = 2;
@@ -800,14 +816,25 @@ var org_html_manager = {
 
     /* do same for all section headers */
     var sectionHeaders = document.querySelectorAll('[id^=sec-]');
-    var curSectionHeader;
-    for (var sectionIndex = 0; sectionIndex < sectionHeaders.length;
-      ++sectionIndex)
-    {
-      curSectionHeader = sectionHeaders[sectionIndex];
-      this.replaceTextWithAnchor(
-        curSectionHeader, '#' + curSectionHeader.id);
-    }
+    /* section headers format was changed in a recent version of org-mode, so
+     * support both */
+    var moreSectionHeaders = document.querySelectorAll(
+      '[id^=orgheadline]');
+    var that = this;
+    [sectionHeaders, moreSectionHeaders].map(
+        function (htmlCollection)
+        {
+          // convert to array
+          return Array.prototype.slice.call(htmlCollection, 0);
+        })
+      .forEach(function (headerArray)
+      {
+        headerArray.forEach(function (curSectionHeader)
+        {
+          that.replaceTextWithAnchor(curSectionHeader, '#' +
+            curSectionHeader.id);
+        });
+      });
 
     /* added hash sections */
     var hashId = window.location.hash.substring(1);
@@ -2691,6 +2718,7 @@ var org_html_manager = {
   {
     var t = this;
     var ret = false;
+    var sec;
     if (null != t.SECS[i])
     {
       if (t.SEARCH_REGEX.test(t.SECS[i].HEADING.innerHTML))
@@ -2700,12 +2728,16 @@ var org_html_manager = {
         t.SECS[i].HAS_HIGHLIGHT = true;
         t.SEARCH_HIGHLIGHT_ON = true;
       }
-      if (t.SEARCH_REGEX.test(t.SECS[i].FOLDER.innerHTML))
+      sec = t.SECS[i];
+      if (sec.FOLDER)
       {
-        ret = true;
-        t.setSearchHighlight(t.SECS[i].FOLDER);
-        t.SECS[i].HAS_HIGHLIGHT = true;
-        t.SEARCH_HIGHLIGHT_ON = true;
+        if (t.SEARCH_REGEX.test(sec.FOLDER.innerHTML))
+        {
+          ret = true;
+          t.setSearchHighlight(sec.FOLDER);
+          sec.HAS_HIGHLIGHT = true;
+          t.SEARCH_HIGHLIGHT_ON = true;
+        }
       }
       return ret;
     }
@@ -2723,24 +2755,29 @@ var org_html_manager = {
   removeSearchHighlight: function ()
   {
     var t = this;
+    var sec;
     for (var i = 0; i < t.SECS.length; ++i)
     {
-      if (t.SECS[i].HAS_HIGHLIGHT)
+      sec = t.SECS[i];
+      if (sec.HAS_HIGHLIGHT)
       {
         var tmp;
-        while (t.SEARCH_HL_REGEX.test(t.SECS[i].HEADING.innerHTML))
+        while (t.SEARCH_HL_REGEX.test(sec.HEADING.innerHTML))
         {
-          tmp = t.SECS[i].HEADING.innerHTML;
-          t.SECS[i].HEADING.innerHTML = tmp.replace(t.SEARCH_HL_REGEX,
+          tmp = sec.HEADING.innerHTML;
+          sec.HEADING.innerHTML = tmp.replace(t.SEARCH_HL_REGEX,
             '$2');
         }
-        while (t.SEARCH_HL_REGEX.test(t.SECS[i].FOLDER.innerHTML))
+        if (sec.FOLDER)
         {
-          tmp = t.SECS[i].FOLDER.innerHTML;
-          t.SECS[i].FOLDER.innerHTML = tmp.replace(t.SEARCH_HL_REGEX,
-            '$2');
+          while (t.SEARCH_HL_REGEX.test(sec.FOLDER.innerHTML))
+          {
+            tmp = sec.FOLDER.innerHTML;
+            sec.FOLDER.innerHTML = tmp.replace(t.SEARCH_HL_REGEX,
+              '$2');
+          }
         }
-        t.SECS[i].HAS_HIGHLIGHT = false;
+        sec.HAS_HIGHLIGHT = false;
       }
     }
     t.SEARCH_HIGHLIGHT_ON = false;
