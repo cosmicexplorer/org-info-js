@@ -41,6 +41,15 @@ p a {
   font-style: inherit !important;
 }
 
+p code {
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+  padding: 0.2em 0.2em;
+  font-size: 85%;
+  font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;
+  color: #333;
+}
+
 a:hover:not(.org-tag) {
   text-decoration: none;
   cursor: pointer;
