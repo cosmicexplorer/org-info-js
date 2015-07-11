@@ -37,6 +37,10 @@ a:not(.org-tag) {
   text-decoration: underline;
 }
 
+p a {
+  font-style: inherit !important;
+}
+
 a:hover:not(.org-tag) {
   text-decoration: none;
   cursor: pointer;
