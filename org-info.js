@@ -1341,7 +1341,8 @@ var org_html_manager = {
       {
         var navi2 = document.createElement("div");
         navi2.className = "org-info-js_local-toc";
-        html = 'Contents:<br /><ul>';
+        html = '<h5 class="page-contents">Contents:</h5>' +
+          '<ul class="contents-list">';
         for (var k = 0; k < this.SECS[i].CHILDREN.length; ++k)
         {
           id = this.SECS[i].CHILDREN[k].BASE_ID;

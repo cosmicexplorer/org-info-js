@@ -43,7 +43,7 @@ p a {
 
 p code {
   background-color: rgba(0, 0, 0, 0.08);
-  font-style: bold;
+  font-weight: bold;
   border-radius: 3px;
   padding: 0.2em 0.2em;
   font-size: 85%;
@@ -96,6 +96,18 @@ h6 a.none {
   display: inline-block !important;
   text-decoration: none !important;
   font-style: normal !important;
+}
+
+.page-contents {
+  font-style: italic;
+  text-transform: lowercase;
+  padding: 0;
+  margin: 0;
+}
+
+.contents-list {
+  padding-top: 0;
+  margin-top: 0;
 }
 
 img,
