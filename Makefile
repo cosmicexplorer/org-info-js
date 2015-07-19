@@ -4,11 +4,11 @@ THIS_MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 CURRENT_DIR := $(patsubst %/,%,$(dir $(THIS_MAKEFILE_PATH)))
 
 NODE_DIR := node_modules
-NPM_BIN = $(shell npm bin)
-UGLIFY_JS = $(NPM_BIN)/uglifyjs
-UGLIFY_CSS = $(NPM_BIN)/uglifycss
+NPM_BIN := $(NODE_DIR)/.bin
+UGLIFY_JS := $(NPM_BIN)/uglifyjs
+UGLIFY_CSS := $(NPM_BIN)/uglifycss
 
-NODE_DEPS = $(UGLIFY_JS) $(UGLIFY_CSS)
+NODE_DEPS := $(UGLIFY_JS) $(UGLIFY_CSS)
 
 UGLIFY_JS_OPTS := -mc --screw-ie8 2>/dev/null
 
