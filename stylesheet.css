@@ -40,9 +40,9 @@ p a {
   font-style: inherit !important;
 }
 
-p code {
+p code,
+li code {
   background-color: rgba(0, 0, 0, 0.08);
-  font-weight: 600;
   border-radius: 3px;
   padding: 0.2em 0.2em;
   font-size: 85%;
@@ -147,9 +147,11 @@ ul {
   margin-left: 2em;
 }
 
-li {
-  margin-right: 5ex;
-  text-align: justify;
+@media (min-width: 400px) {
+  li {
+    margin-right: 5ex;
+    text-align: justify;
+  }
 }
 
 dt {
@@ -160,8 +162,10 @@ dd {
   margin-left: 3em;
 }
 
-p {
-  text-align: justify;
+@media (min-width: 400px) {
+  p {
+    text-align: justify;
+  }
 }
 
 .todo {
@@ -204,7 +208,6 @@ th {
 pre,
 code.pre {
   /* width:80%; */
-
   margin-left: 2%;
   margin-right: 2%;
   margin-top: 1em;
