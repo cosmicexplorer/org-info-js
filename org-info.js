@@ -861,6 +861,19 @@ var org_html_manager = {
       }
       break;
     }
+    // added querySelectorAll
+    var res = document.querySelectorAll('.headline');
+    var idEls = Array.prototype.slice.call(res, 0);
+    console.log(idEls);
+    idEls.forEach(function(el){
+      if (el.tagName !== 'a') {
+        var id = el.id;
+        var prevHTML = el.innerHTML;
+        var newHTML = '<a href="#' + id + '">' + prevHTML + '</a>';
+        console.log(newHTML);
+        document.getElementById(id).innerHTML = newHTML;
+      }
+    });
   },
 
   // quick and dirty, but also relatively reliable
@@ -1151,6 +1164,7 @@ var org_html_manager = {
         org_html_manager.fold("" + sec);
       };
       h.style.cursor = "pointer";
+      h.className += ' headline';
       if (this.MOUSE_HINT)
       {
         h.onmouseover = function ()
