@@ -59,13 +59,16 @@
 
 var OrgModeVersion = "0.1.7.1-fork";
 
+function toArray(htmlCollection) {
+  return Array.prototype.slice.call(htmlCollection, 0);
+}
+
 /**
  * Creates a new OrgNode.
  * An OrgOutline stores some refs to its assoziated node in the document tree
  * along with some additional properties.
  */
-function OrgNode(_div, _heading, _link, _depth, _parent, _base_id,
-  _toc_anchor)
+function OrgNode(_div, _heading, _link, _depth, _parent, _base_id, _toc_anchor)
 {
   var t = this;
   t.DIV = _div;
@@ -821,12 +824,7 @@ var org_html_manager = {
     var moreSectionHeaders = document.querySelectorAll(
       '[id^=orgheadline]');
     var that = this;
-    [sectionHeaders, moreSectionHeaders].map(
-        function (htmlCollection)
-        {
-          // convert to array
-          return Array.prototype.slice.call(htmlCollection, 0);
-        })
+    [sectionHeaders, moreSectionHeaders].map(toArray)
       .forEach(function (headerArray)
       {
         headerArray.forEach(function (curSectionHeader)
@@ -861,19 +859,6 @@ var org_html_manager = {
       }
       break;
     }
-    // added querySelectorAll
-    var res = document.querySelectorAll('.headline');
-    var idEls = Array.prototype.slice.call(res, 0);
-    console.log(idEls);
-    idEls.forEach(function(el){
-      if (el.tagName !== 'a') {
-        var id = el.id;
-        var prevHTML = el.innerHTML;
-        var newHTML = '<a href="#' + id + '">' + prevHTML + '</a>';
-        console.log(newHTML);
-        document.getElementById(id).innerHTML = newHTML;
-      }
-    });
   },
 
   // quick and dirty, but also relatively reliable
@@ -1554,6 +1539,24 @@ var org_html_manager = {
     {
       'last': last_node,
       'current': t.NODE
+    });
+    var idEls = toArray(document.querySelectorAll('.headline'));
+    console.log(idEls);
+    idEls.forEach(function(el){
+      if (el.tagName !== 'a') {
+        toArray(el.getElementsByTagName('a')).forEach(function(node) {
+          if ((node.getAttribute('href') !== ('#' + el.id)) ||
+              (node.innerHTML === '')) {
+            node.parentNode.removeChild(node);
+          }
+        });
+        var prevHTML = el.innerHTML;
+        if (prevHTML !== '') {
+          var newHTML = '<a href="#' + el.id + '">' + prevHTML + '</a>';
+          console.log(newHTML);
+          document.getElementById(el.id).innerHTML = newHTML;
+        }
+      }
     });
   },
 
