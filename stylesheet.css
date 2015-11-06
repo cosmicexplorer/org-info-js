@@ -25,6 +25,66 @@ h6 {
   text-align: left;
 }
 
+h1.headline > a {
+  text-decoration: none !important;
+  color: inherit !important;
+  font-style: inherit !important;
+}
+
+h1.headline > a:visited {
+  color: inherit;
+}
+
+h2.headline > a {
+  text-decoration: none !important;
+  color: inherit !important;
+  font-style: inherit !important;
+}
+
+h2.headline > a:visited {
+  color: inherit;
+}
+
+h3.headline > a {
+  text-decoration: none !important;
+  color: inherit !important;
+  font-style: inherit !important;
+}
+
+h3.headline > a:visited {
+  color: inherit;
+}
+
+h4.headline > a {
+  text-decoration: none !important;
+  color: inherit !important;
+  font-style: inherit !important;
+}
+
+h4.headline > a:visited {
+  color: inherit;
+}
+
+h5.headline > a {
+  text-decoration: none !important;
+  color: inherit !important;
+  font-style: inherit !important;
+}
+
+h5.headline > a:visited {
+  color: inherit;
+}
+
+h6.headline > a {
+  text-decoration: none !important;
+  color: inherit !important;
+  font-style: inherit !important;
+}
+
+h6.headline > a:visited {
+  color: inherit;
+}
+
 div {
   text-align: left;
 }
