@@ -5,6 +5,7 @@
  * Version: 0.1.7.1
  *
  * @author Sebastian Rose, Hannover, Germany - sebastian_rose at gmx dot de
+ * @author Daniel McClanahan, USA - danieldmcclanahan at gmail dot com
  *
  *
  * This software is subject to the GNU General Public Licens version 3:
